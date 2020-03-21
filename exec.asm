@@ -22,6 +22,7 @@
 	PUBLIC	ESCAPE
 	PUBLIC	SYNTAX
 	PUBLIC	CHANEL
+	PUBLIC  PTEXT
 ;
 	EXTERN	ERROR
 	EXTERN	REPORT
@@ -472,7 +473,7 @@ ERROR1:	JP	ERROR
 ;
 DIM4:	OR	A
 	JR	Z,BADDIM
-	JP	M,BADDIM	
+	JP	M,BADDIM
 	LD	B,A
 	LD	A,(IY-1)
 	CP	')'
@@ -1571,7 +1572,7 @@ STORS5:	LD	A,CR
 ; CALLING STATEMENT TO THE DUMMY VARIABLES VIA
 ; THE STACK.  IT MUST BE DONE THIS WAY TO MAKE
 ; PROCFRED(A,B)    DEF PROCFRED(B,A)     WORK.
-;   Inputs: DE addresses parameter list 
+;   Inputs: DE addresses parameter list
 ;           IY addresses dummy variable list
 ;  Outputs: DE,IY updated
 ; Destroys: Everything

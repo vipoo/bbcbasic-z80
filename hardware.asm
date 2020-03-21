@@ -1,13 +1,13 @@
 ; Copyright (c) 2020 J.B. Langston
-; 
+;
 ; This software is provided 'as-is', without any express or implied
 ; warranty. In no event will the authors be held liable for any damages
 ; arising from the use of this software.
-; 
+;
 ; Permission is granted to anyone to use this software for any purpose,
 ; including commercial applications, and to alter it and redistribute it
 ; freely, subject to the following restrictions:
-; 
+;
 ; 1. The origin of this software must not be misrepresented; you must not
 ;    claim that you wrote the original software. If you use this software
 ;    in a product, an acknowledgment in the product documentation would be
@@ -44,8 +44,14 @@
 	EXTERN	EXPRI
 	EXTERN	COMMA
 	EXTERN	XEQ
+	EXTERN XEQ0
+
+
+	EXTERN	HEXSTR	;HEX
+	EXTERN	PTEXT
 
 ESC	EQU	27
+CR	EQU	0DH
 
 ;CLRSCN	- Clear screen.
 ;	  (Alter characters to suit your VDU)
@@ -187,13 +193,95 @@ GETXY:	CALL	EXPRI		;"X"
 	POP	DE
 	RET
 
+SOUND_CMD_TONE_1: DEFB 0
+SOUND_CMD_TONE_2: DEFB 0
+SOUND_VOLUMN_CMD: DEFB 0
+
+SOUND:
+	CALL	EXPRI			; Arg C (Channel)
+	EXX
+	LD	A, L
+	AND	$3
+	RLCA
+	RLCA
+	RLCA
+	RLCA
+	RLCA
+	OR	$80
+	LD	(SOUND_CMD_TONE_1), A
+	OR	$10
+	LD	(SOUND_VOLUMN_CMD), A
+
+	CALL	COMMA
+	CALL	EXPRI			; Arg V (Volume)
+	EXX
+	LD	A, L
+	ADD	$F
+	AND	$F
+	LD	B, A
+	LD	A, (SOUND_VOLUMN_CMD)
+	OR	B
+	LD	(SOUND_VOLUMN_CMD), A
+
+	CALL	COMMA
+	CALL	EXPRI			; Arg P (Pitch)
+	EXX
+	LD	A, L
+	AND	$F
+	LD	B, A
+	LD	A, (SOUND_CMD_TONE_1)
+	OR	B
+	LD	(SOUND_CMD_TONE_1), A
+
+	LD	A, L
+	RRCA
+	RRCA
+	RRCA
+	RRCA
+	AND	$F
+	LD	B, A
+
+	LD	A, H
+	AND	$3
+	RLCA
+	RLCA
+	RLCA
+	RLCA
+	OR	B
+	LD	(SOUND_CMD_TONE_2), A
+
+	CALL	COMMA
+	CALL	EXPRI			; Arg D (Duration)
+
+; Bits maping
+; Set Tone:
+; 1 CC 0 PPPP (low)
+; 0 0 PPPPPP (high)
+
+; 1 CC 1 VVVV
+#define SN76489_PORT_LEFT $00FC
+#define SN76489_PORT_RIGHT $00F8
+
+	LD	A, (SOUND_CMD_TONE_1)
+	OUT	(SN76489_PORT_LEFT), A
+	OUT	(SN76489_PORT_RIGHT), A
+
+	LD	A, (SOUND_CMD_TONE_2)
+	OUT 	(SN76489_PORT_LEFT), A
+	OUT 	(SN76489_PORT_RIGHT), A
+
+	LD	A, (SOUND_VOLUMN_CMD)
+	OUT	(SN76489_PORT_LEFT), A
+	OUT	(SN76489_PORT_RIGHT), A
+
+	JP	XEQ
+
 ; unimplemented functions
 CLG:
 DRAW:
 MOVE:
 POINT:
 ENVEL:
-SOUND:
 ADVAL:
 GETIMS:
 PUTIMS:
@@ -201,7 +289,7 @@ PUTIMS:
 	CALL	EXTERR
 	DEFM	"Not implemented"
 	DEFB	0
-	
+
 ; VDP state
 VDPADR:	DEFB	0BEH		; VDP base port
 VDPINT:	DEFB	0		; 0 = NMI, 1 = INT
@@ -233,7 +321,7 @@ MODREG:	DEFB	0, 0D0H		; MODE 0: text
 	DEFB	0, 0C0H		; MODE 1: tile graphics
 	DEFB	2, 0C0H		; MODE 2: bitmap graphics
 	DEFB	0, 0C8H		; MODE 3: multicolor graphics
-	
+
 ; initialize vdp registers to default values
 ;	A = mode to set
 VDPINI:	AND	3		; limit to modes 0-3
@@ -335,7 +423,7 @@ SETREG:	LD	A,(CMODE)
 	INC	B
 	OUT	(C),A
 	OUT	(C),B
-	RET	
+	RET
 
 ; Bit mask values for X coordinates 0 through 7
 MASK:	DEFB 80H, 40H, 20H, 10H, 8H, 4H, 2H, 1H

@@ -1070,7 +1070,7 @@ NOBOOT:	EX	DE,HL
 	LD	HL,USER
 	RET
 ;
-;BYE - Stop interrupts and return to CP/M. 
+;BYE - Stop interrupts and return to CP/M.
 ;
 BYE:	RST	0
 ;
