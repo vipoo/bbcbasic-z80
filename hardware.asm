@@ -18,6 +18,19 @@
 
 ; HARDWARE FUNCTIONS
 
+USE_HBIOS		EQU	1	; 1 - Enable code to use Extended HBIOS calls to determine H/W ports
+					; 0 - Use Fixed Port Numbers
+VDPPORT			EQU	$BE	; Only used if USE_HBIOS = 1
+
+SN76489_PORT_LEFT 	EQU	$00FC	; Ports for accessing the SN76489 Chip
+SN76489_PORT_RIGHT 	EQU	$00F8
+
+ESC			EQU	27
+CR			EQU	$0D
+
+HBIOS			EQU	08
+BF_IOPORTS		EQU	$4F	; HBIOS Extended call to get H/W port for VDU
+
 	PUBLIC	CLG
 	PUBLIC	COLOUR
 	PUBLIC	DRAW
@@ -44,14 +57,8 @@
 	EXTERN	EXPRI
 	EXTERN	COMMA
 	EXTERN	XEQ
-	EXTERN XEQ0
+	EXTERN 	XEQ0
 
-
-	EXTERN	HEXSTR	;HEX
-	EXTERN	PTEXT
-
-ESC	EQU	27
-CR	EQU	0DH
 
 ;CLRSCN	- Clear screen.
 ;	  (Alter characters to suit your VDU)
@@ -159,7 +166,7 @@ BDGCOL:	LD	A,(CCOLOR)	; get current backdrop colors
 	AND	0F0H		; clear existing backdrop
 	OR	E		; set new backdrop
 	LD	(CCOLOR),A	; save backdrop colors
-	LD	BC,(VDPADR)	; send to vdp
+	LD	BC, (VDPADR) ; send to vdp
 	INC	C
 	LD	B,87H
 	OUT	(C),A
@@ -259,8 +266,6 @@ SOUND:
 ; 0 0 PPPPPP (high)
 
 ; 1 CC 1 VVVV
-#define SN76489_PORT_LEFT $00FC
-#define SN76489_PORT_RIGHT $00F8
 
 	LD	A, (SOUND_CMD_TONE_1)
 	OUT	(SN76489_PORT_LEFT), A
@@ -291,8 +296,15 @@ PUTIMS:
 	DEFB	0
 
 ; VDP state
-VDPADR:	DEFB	0BEH		; VDP base port
+
+if USE_HBIOS
+VDPADR:	DEFB	0		; VDP base port
+	DEFB	0		; Retrieved from HBIOS call
+else
+VDPADR:	DEFB	VDPPORT		; VDP base port
 VDPINT:	DEFB	0		; 0 = NMI, 1 = INT
+endif
+
 CMODE:	DEFB	2		; Current graphics mode
 CGCOL:	DEFB	0F0H		; Current graphics color
 CCOLOR:	DEFB	0F0H		; Current text color
@@ -322,11 +334,25 @@ MODREG:	DEFB	0, 0D0H		; MODE 0: text
 	DEFB	2, 0C0H		; MODE 2: bitmap graphics
 	DEFB	0, 0C8H		; MODE 3: multicolor graphics
 
+
+
 ; initialize vdp registers to default values
 ;	A = mode to set
-VDPINI:	AND	3		; limit to modes 0-3
+
+VDPINI:
+if USE_HBIOS
+	PUSH	AF
+	LD      B, BF_IOPORTS
+	LD      C, 0
+	RST     HBIOS
+	LD	C, D
+	LD	B, 0
+	LD	(VDPADR), BC
+	POP	AF
+endif
+	AND	3		; limit to modes 0-3
 	LD	(CMODE),A	; save mode for later
-	LD	BC,(VDPADR)
+	LD	BC,(VDPADR)	; send to vdp
 	INC	C		; select vdp register port
 	LD	HL,DEFREG	; look up default register values
 	LD	B,7		; register counter
@@ -460,7 +486,7 @@ BMPLOT:	LD	A,(CMODE)	; only plot in mode 2
 	LD	C,A
 	ADD	HL,BC
 	LD	A,(HL)		; get mask in A
-	LD	BC,(VDPADR)
+	LD	BC, (VDPADR)
 	INC	C		; select vdp register port
 	LD	HL,PATTAB
 	ADD	HL,DE
