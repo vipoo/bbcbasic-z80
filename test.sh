@@ -30,15 +30,15 @@ if [ "$SCREEN_PID" != "" ]; then
   echo
   echo "Session failed to exit"
 else
-  #cat output.txt
   awk '/RUN/,/efg/' /tmp/output.txt > ./.test-output.txt
+  #cp /tmp/output.txt ./.test-output.txt
 
   cd ./tests-fixtures
   if ./${SCRIPT_TO_RUN}.sh ../.test-output.txt; then
     echo "PASSED"
   else
     echo "FAILED"
-    cat ../.test-output.txt
+#    cat ../.test-output.txt
   fi
 fi
 
