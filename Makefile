@@ -5,3 +5,10 @@ bbcbasic.com: $(SRCS)
 
 clean:
 	rm -f *.o *.err *.lis *.map *.com *.bin
+
+TEST_FILES := $(shell find ./tests-fixtures -name '*.bas')
+
+.PHONY: test
+
+test:
+	@./all-tests.sh

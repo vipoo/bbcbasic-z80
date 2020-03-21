@@ -4,3 +4,4 @@
 *.map
 *.com
 *.bin
+.test-output.txt

@@ -28,3 +28,20 @@ If make is not available, run:
 ```
 z80asm -obbcbasic.com -b -d -l -m main.asm exec.asm eval.asm fpp.asm hardware.asm cpm.asm ram.asm
 ```
+
+# Testing
+
+The submodule `cpm` can be used to run a set of tests scripts.
+
+First ensure you have inited and pull the submodule
+
+`git submodule update --init --recursive`
+
+Then within the cpm directory
+
+`make`
+
+then, within the root project directory
+
+`make test`
+
