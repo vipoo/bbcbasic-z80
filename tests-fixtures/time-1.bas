@@ -1,0 +1,4 @@
+10 TIME = 0
+
+22 PRINT "T1:"; TIME
+30 PRINT "T2:"; TIME

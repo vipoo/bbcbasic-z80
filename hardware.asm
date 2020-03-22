@@ -23,8 +23,6 @@ include "constants.inc"
 
 VDPPORT			EQU	$BE	; Only used if USE_HBIOS = 1
 
-
-
 	PUBLIC	CLG
 	PUBLIC	COLOUR
 	PUBLIC	DRAW
@@ -40,8 +38,6 @@ VDPPORT			EQU	$BE	; Only used if USE_HBIOS = 1
 	PUBLIC	CLRSCN
 	PUBLIC	PUTCSR
 	PUBLIC	GETCSR
-	PUBLIC	PUTIME
-	PUBLIC	GETIME
 
 	EXTERN	EXTERR
 	EXTERN	TELL
@@ -51,6 +47,8 @@ VDPPORT			EQU	$BE	; Only used if USE_HBIOS = 1
 	EXTERN	COMMA
 	EXTERN	XEQ
 	EXTERN 	XEQ0
+	EXTERN	GETIME
+	EXTERN	PUTIME
 
 if USE_HBIOS
 	PUBLIC	HBIOS_INIT
@@ -120,17 +118,6 @@ GETCSR:	LD	DE,(TEXTX)
 	LD	HL,(TEXTY)
 	RET
 
-;GETIME	- Read elapsed-time clock.
-;  	  Outputs: DEHL = elapsed time (centiseconds)
-; 	  Destroys: A,D,E,H,L,F
-GETIME:	LD	DE,0
-	LD	HL,0
-	RET
-
-;PUTIME	- Load elapsed-time clock.
-;	  Inputs: DEHL = time to load (centiseconds)
-; 	  Destroys: A,D,E,H,L,F
-PUTIME:	RET
 ;
 ;COLOUR	- Set text color
 COLOUR:	CALL	EXPRI

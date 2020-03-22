@@ -1,0 +1,55 @@
+;	TITLE	BBC BASIC (C) R.T.RUSSELL 1987
+;
+;BBC BASIC INTERPRETER - Z80 VERSION
+;HARDWARE SOUND INTERFACE
+;(C) COPYRIGHT  R.T.RUSSELL  1984
+; extensions by Dean Netherton 2020
+
+include "config.inc"
+include "constants.inc"
+
+	PUBLIC	GETIME
+	PUBLIC	PUTIME
+	PUBLIC	TIMETICK
+	PUBLIC	TIMETICKQUICK
+
+	EXTERN	TIMESTOREH
+	EXTERN	TIMESTOREL
+	EXTERN	TIMESTOREL1
+
+TIMETICKQUICK:
+	LD	A, (TIMESTOREL1)
+	ADD	A, 1
+	LD	(TIMESTOREL1), A
+	JR	NC, SKIP
+
+TIMETICK:
+	LD	HL, (TIMESTOREL)
+	ADD	HL, 1
+	LD	(TIMESTOREL), HL
+	JR	NC, SKIP
+
+    	LD	HL, (TIMESTOREH)
+	INC	HL
+	LD	(TIMESTOREH), HL
+SKIP:
+	RET
+
+;GETIME	- Read elapsed-time clock.
+;  	  Outputs: DEHL = elapsed time (centiseconds)
+; 	  Destroys: A,D,E,H,L,F
+GETIME:
+	LD	DE, (TIMESTOREH)
+	LD	HL, (TIMESTOREL)
+
+	RET
+
+;PUTIME	- Load elapsed-time clock.
+;	  Inputs: DEHL = time to load (centiseconds)
+; 	  Destroys: A,D,E,H,L,F
+PUTIME:
+	LD	(TIMESTOREH), DE
+	LD	(TIMESTOREL), HL
+	RET
+
+
