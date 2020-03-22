@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 SCRIPT_TO_RUN=$1
 sudo rm /tmp/output.txt
 SCREEN_PID=$(sudo screen -ls | grep bbcbasictestrunner | cut -d. -f1 | awk '{print $1}')
