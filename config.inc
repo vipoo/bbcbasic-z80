@@ -21,4 +21,6 @@ BF_VDAKRD	EQU	BF_VDA + 14	; READ KEYBOARD
 BF_IOPORTS	EQU	BF_VDA + 15     ; RETURN KEY HARDWARE PORTS
 
 BF_SND		EQU	$50
-BF_SNDINI	EQU	BF_SND + 0      ; INITIALIZE SOUND SYSTEM
+BF_SNDINI	EQU	BF_SND + 0	; INITIALIZE SOUND SYSTEM
+BF_SNDVOL	EQU	BF_SND + 1	; SET VOL - D is channel, E contains volume (255 MAX, 0 SILENT) - scaled as required by driver (eg: maps to just 4 bit resolution for SN76489)
+BF_SNDPIT	EQU	BF_SND + 2	; SET PITCH - D is channel, HL contains pitch (0 Lowest Note, FFFF highest note) - scaled by driver (eg: maps to just 10 bits for SN76489 )
