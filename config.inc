@@ -1,4 +1,4 @@
-USE_HBIOS		EQU	0	; 1 - Enable code to use Extended HBIOS calls to determine H/W ports
+USE_HBIOS		EQU	1	; 1 - Enable code to use Extended HBIOS calls to determine H/W ports
 					; 0 - Use Fixed Port Numbers
 HBIOS			EQU	08
 
