@@ -18,18 +18,13 @@
 
 ; HARDWARE FUNCTIONS
 
-USE_HBIOS		EQU	1	; 1 - Enable code to use Extended HBIOS calls to determine H/W ports
-					; 0 - Use Fixed Port Numbers
-VDPPORT			EQU	$BE	; Only used if USE_HBIOS = 1
+include "config.inc"
+include "constants.inc"
 
+VDPPORT			EQU	$BE	; Only used if USE_HBIOS = 1
 SN76489_PORT_LEFT 	EQU	$00FC	; Ports for accessing the SN76489 Chip
 SN76489_PORT_RIGHT 	EQU	$00F8
 
-ESC			EQU	27
-CR			EQU	$0D
-
-HBIOS			EQU	08
-BF_IOPORTS		EQU	$4F	; HBIOS Extended call to get H/W port for VDU
 
 	PUBLIC	CLG
 	PUBLIC	COLOUR
@@ -59,6 +54,31 @@ BF_IOPORTS		EQU	$4F	; HBIOS Extended call to get H/W port for VDU
 	EXTERN	XEQ
 	EXTERN 	XEQ0
 
+if USE_HBIOS
+	PUBLIC	HBIOS_INIT
+
+HBIOS_INIT:
+	PUSH	AF		; Retrieve TMS9918 Ports
+	CALL	TELL
+	DEFM	"Retriving ports from HBIOS"
+	DEFB	CR
+	DEFB	LF
+	DEFB	0
+
+	LD      B, BF_IOPORTS
+	LD      C, 0
+	RST     HBIOS
+	LD	C, D
+	LD	B, 0
+	LD	(VDPADR), BC
+
+	LD	B, BF_SNDINI	; Set Audio to silence
+	LD	C, 0
+	RST	HBIOS
+
+	POP	AF
+	RET
+endif
 
 ;CLRSCN	- Clear screen.
 ;	  (Alter characters to suit your VDU)
@@ -335,21 +355,10 @@ MODREG:	DEFB	0, 0D0H		; MODE 0: text
 	DEFB	0, 0C8H		; MODE 3: multicolor graphics
 
 
-
 ; initialize vdp registers to default values
 ;	A = mode to set
 
 VDPINI:
-if USE_HBIOS
-	PUSH	AF
-	LD      B, BF_IOPORTS
-	LD      C, 0
-	RST     HBIOS
-	LD	C, D
-	LD	B, 0
-	LD	(VDPADR), BC
-	POP	AF
-endif
 	AND	3		; limit to modes 0-3
 	LD	(CMODE),A	; save mode for later
 	LD	BC,(VDPADR)	; send to vdp
