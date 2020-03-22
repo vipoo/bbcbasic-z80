@@ -39,6 +39,7 @@ else
     echo "PASSED"
   else
     echo "FAILED"
+    exit 1
 #    cat ../.test-output.txt
   fi
 fi
