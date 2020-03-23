@@ -11,21 +11,28 @@ include "constants.inc"
 SN76489_PORT_LEFT 	EQU	$00FC	; Ports for accessing the SN76489 Chip
 SN76489_PORT_RIGHT 	EQU	$00F8
 
-SOUND_CMD_TONE_1:	DEFB	0
-SOUND_CMD_TONE_2:	DEFB	0
-SOUND_VOLUMN_CMD:	DEFB	0
-
 	PUBLIC	SOUND
+	PUBLIC	SOUND_INIT
+
 	EXTERN	EXPRI
 	EXTERN	COMMA
 	EXTERN	XEQ
+	EXTERN	SOUND_ENABLED
 
 
+SOUND_INIT:
+	LD	B, SYSGET
+	LD	C, SNDCNT
+	RST	08
+
+	LD	A, E
+	LD	(SOUND_ENABLED), A
+	RET
 
 SOUND:
 if !USE_HBIOS
 	CALL	EXPRI			; Arg C (Channel)
-	CALL	COMMA ;
+	CALL	COMMA
 	CALL	EXPRI			; Arg V (Volume) -15 loudest, 0 silent
 	CALL	COMMA
 	CALL	EXPRI			; Arg P (Pitch) 0 to 255
@@ -54,10 +61,15 @@ endif
 	LD	E, A			; Volume 0 - silent, 255 loudest
 	PUSH	DE
 
-	LD	B, BF_SNDVOL		; Issue command to HBIOS
+	LD	A, (SOUND_ENABLED)
+	OR	A
+	JR	Z, SKIP1
+
+	LD	B, SNDVOL		; Issue command to HBIOS
 	LD	C, 0
 	RST	HBIOS
 
+SKIP1:
 	CALL	COMMA
 	CALL	EXPRI			; Arg P (Pitch) 0 to 255
 	EXX
@@ -67,10 +79,15 @@ endif
 
 	POP	DE			; restore channel
 
-	LD	B, BF_SNDPIT		; Issue command to HBIOS
+	LD	A, (SOUND_ENABLED)
+	OR	A
+	JR	Z, SKIP2
+
+	LD	B, SNDPIT		; Issue command to HBIOS
 	LD	C, 0
 	RST	HBIOS
 
+SKIP2:
 	CALL	COMMA
 	CALL	EXPRI			; Arg D (Duration) -- ignored for moment
 

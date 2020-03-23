@@ -36,6 +36,7 @@
 	PUBLIC TIMESTOREL
 	PUBLIC TIMESTOREH
 	PUBLIC TIMESTOREL1
+	PUBLIC SOUND_ENABLED
 ;
 	SECTION	DATA
 	ALIGN	256
@@ -80,5 +81,7 @@ TIMESTOREH:			; Store current time tick low 16 bits
 TIMESTOREL1:			; Store current time tick high 16 bits - INTERNAL TIME COUNTER
 	DEFB	0
 
+SOUND_ENABLED:
+	DEFB	0		; Assigned to 1 if HBIOS sound driver found
 ;
 USER:
