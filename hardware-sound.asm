@@ -20,7 +20,21 @@ SOUND_VOLUMN_CMD:	DEFB	0
 	EXTERN	COMMA
 	EXTERN	XEQ
 
+
+
 SOUND:
+if !USE_HBIOS
+	CALL	EXPRI			; Arg C (Channel)
+	CALL	COMMA ;
+	CALL	EXPRI			; Arg V (Volume) -15 loudest, 0 silent
+	CALL	COMMA
+	CALL	EXPRI			; Arg P (Pitch) 0 to 255
+	CALL	COMMA
+	CALL	EXPRI			; Arg D (Duration) -- ignored for moment
+
+	RET				; Not supported
+endif
+
 	CALL	EXPRI			; Arg C (Channel)
 	EXX
 	LD	D, L
