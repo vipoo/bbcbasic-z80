@@ -1,0 +1,3 @@
+#SYSGET SNDCNT no sound adapter installed.
+> B:F8 C:50
+< E:00

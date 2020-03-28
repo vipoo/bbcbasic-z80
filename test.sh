@@ -1,7 +1,9 @@
 #!/bin/bash
 
+TEST_RUNNER_DIR=./tests-fixtures/
 SCRIPT_TO_RUN=$1
 TAIL=${2}
+MOCK_FILE=${TEST_RUNNER_DIR}${SCRIPT_TO_RUN}.mock
 
 sudo rm /tmp/output.txt
 
@@ -11,9 +13,15 @@ if [ "$SCREEN_PID" != "" ]; then
 fi
 
 echo "${SCRIPT_TO_RUN}:"
-sudo screen -d -m -L -Logfile /tmp/output.txt -S "bbcbasictestrunner" ./cpm/cpm
+
+CMD=""
+if test -f "$MOCK_FILE"; then
+  CMD="--hbios-mocks $MOCK_FILE $CMD"
+fi
+
+sudo screen -d -m -L -Logfile /tmp/output.txt -S "bbcbasictestrunner" ./cpm/cpm $CMD
 sudo screen -r bbcbasictestrunner -p0 -X logfile flush 0
-input="./tests-fixtures/${SCRIPT_TO_RUN}.bas"
+input="${TEST_RUNNER_DIR}${SCRIPT_TO_RUN}.bas"
 sudo screen -S bbcbasictestrunner -p 0 -X stuff "BBCBASIC^M"
 
 if [ "$TAIL" != "no-tail" ]; then
