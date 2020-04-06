@@ -50,15 +50,19 @@ endif
 	CALL	COMMA ;
 	CALL	EXPRI			; Arg V (Volume) -15 loudest, 0 silent
 	EXX
-	LD	A, L
-	ADD	$F
-	AND	$F
+
+	LD	A, 0
+	SUB	L
+	AND	$0F
+	LD	B, A
 	RLCA
 	RLCA
 	RLCA
 	RLCA
-	POP	DE
-	LD	E, A			; Volume 0 - silent, 255 loudest
+	OR	B
+	LD	L, A			; Volume 0 - silent, 255 loudest
+
+	POP	DE			; Restore channel
 	PUSH	DE
 
 	LD	A, (SOUND_ENABLED)
@@ -78,6 +82,7 @@ SKIP1:
 	LD	L, 0			; HL contains pitch 0 to 0xFFFF
 
 	POP	DE			; restore channel
+	PUSH	DE
 
 	LD	A, (SOUND_ENABLED)
 	OR	A
@@ -90,5 +95,21 @@ SKIP1:
 SKIP2:
 	CALL	COMMA
 	CALL	EXPRI			; Arg D (Duration) -- ignored for moment
+	EXX
 
+	POP	DE			; restore channel
+
+	LD	A, (SOUND_ENABLED)
+	OR	A
+	JR	Z, SKIP3
+
+	LD	B, SNDDUR
+	LD	C, 0
+	RST	HBIOS
+
+	LD	B, SNDPLAY		; Issue command to HBIOS
+	LD	C, 0
+	RST	HBIOS
+
+SKIP3:
 	JP	XEQ
