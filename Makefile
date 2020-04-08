@@ -5,6 +5,10 @@ INCS := $(shell find . -name '*.inc')
 bbcbasic.com: $(SRCS) $(INCS)
 	z80asm -obbcbasic.com -b -d -l -m $(SRCS)
 
+.PHONY: cpm
+cpm:
+	$(MAKE) --directory cpm
+
 clean:
 	rm -f *.o *.err *.lis *.map *.com *.bin
 
