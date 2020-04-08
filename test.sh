@@ -5,7 +5,7 @@ SCRIPT_TO_RUN=$1
 TAIL=${2}
 MOCK_FILE=${TEST_RUNNER_DIR}${SCRIPT_TO_RUN}.mock
 
-sudo rm /tmp/output.txt
+sudo rm -f /tmp/output.txt
 
 SCREEN_PID=$(sudo screen -ls | grep bbcbasictestrunner | cut -d. -f1 | awk '{print $1}')
 if [ "$SCREEN_PID" != "" ]; then
