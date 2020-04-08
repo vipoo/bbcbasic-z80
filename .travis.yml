@@ -30,7 +30,8 @@ script:
 
 deploy:
   provider: releases
-  api_key: "GITHUB OAUTH TOKEN"
+  api_key:
+    secure: "bkuPoKXrAlFNqRXKVsGIhuH37tzHRcq/QQzCB0lWXwZ11PS04iDyHRon/0unN1Cy2hT5/WvlgavbwelVu6ZkXbikO6f8ySacoHkPJPQOjQwnwcdQ+FeTvZ4tSRRYfHiMLxHYKZ9uMBVov+zD9Y6FanGoQRPdvOxNlZVCp6ihMaIO4SbyME9/n7dQy9CWZBW9rSdgwIwGfQOx1WihyjCO1fR8JGS5NlM4MYv1OKCs+55ItViLuTiX6g03yUJSVoPgp1o/HSBEdv2Dod/YvnnJnHb9xwT9FN5nQx431JtJUU0qmDF2av5f0OUjMpdraiht7lS9uT+UuREHOBFn+GHWwc1ROUpwOYltDEMkaKoVs8rPzWv9BEPiwsnEa/Ynw9YYykyYzi1y+4kSwUMygbyl0p48CnJpv2oLQW3cOJAnBDiw+ZwvO9JqG6dWKoXo5cGVCi65Rut/SMKuJ/sZCRricm2BQR7eN+7j+RdCE9YkGtz3Brtqeka8lvB8CP4BGJDoNprUG0M8FFLRx6/PPQ/KMWd1MEh2gl0P0PImXnhuKD89cQt5LD3xiB3YMO74gSJmPkLCcy66TQiOZfTfxxAbE4q8qL5YMs+nzpQD9D/kxtZTq78vuiP/E4xm9dSl2r7dbEMQawUm54SGjNefAXHxUXbkGepSk9vfCjSSYfhYDLE="
   file: bbcbasic.com
   skip_cleanup: true
   on:
