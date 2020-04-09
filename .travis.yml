@@ -10,9 +10,6 @@ git:
   depth: 3
 
 before_install:
-  - sudo apt-get update && sudo apt-get -y install dos2unix libboost-all-dev texinfo texi2html libxml2-dev subversion bison flex zlib1g-dev
-  - sed -i 's/git@github.com:/https:\/\/github.com\//' .gitmodules
-  - git submodule update --init --recursive
 
 install:
   - wget https://github.com/vipoo/z88dk/releases/download/v2.0.0-dino/z88dk-2.0.0-dino.tar.gz

@@ -19,7 +19,7 @@ if test -f "$MOCK_FILE"; then
   CMD="--hbios-mocks $MOCK_FILE $CMD"
 fi
 
-sudo screen -d -m -L -Logfile /tmp/output.txt -S "bbcbasictestrunner" ./cpm/cpm $CMD
+sudo screen -d -m -L -Logfile /tmp/output.txt -S "bbcbasictestrunner" cpm $CMD
 sudo screen -r bbcbasictestrunner -p0 -X logfile flush 0
 input="${TEST_RUNNER_DIR}${SCRIPT_TO_RUN}.bas"
 sudo screen -S bbcbasictestrunner -p 0 -X stuff "BBCBASIC^M"

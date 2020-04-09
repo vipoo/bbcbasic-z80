@@ -33,15 +33,28 @@ z80asm -obbcbasic.com -b -d -l -m main.asm exec.asm eval.asm fpp.asm hardware.as
 
 The submodule `cpm` can be used to run a set of tests scripts.
 
-First ensure you have inited and pull the submodule
+# BBC Basic Fork for HBIOS Support
 
-`git submodule update --init --recursive`
+This fork of bbc basic, has support for SOUND via the RomWBW HBIOS system
 
-Then within the cpm directory
+At this stage, the required HBIOS feature support is still in development at [RomWBW-Env](https://github.com/vipoo/RomWBW-Env), and has yet to be
+merged into the main repo [wwarthen mainline RomWBW](https://github.com/wwarthen/RomWBW)
+
+## Building
+
+### Dependencies
+
+Requires cpm emulator - with mocking support of HBIOS
+
+You can download and `make && make install` from here [CPM Emulator with HBIOS mocking](https://github.com/vipoo/cpm)
+
+Then within the main directory
 
 `make`
 
-then, within the root project directory
-
 `make test`
+
+This will produce a bbcbasic.com file - that can only be run on a supported system.
+
+To run this version of basic, you need to have a version of RomWBW that includes Video/Sound support - see [RomWBW-Env](https://github.com/vipoo/RomWBW-Env) for more details
 
