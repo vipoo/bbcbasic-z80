@@ -19,21 +19,32 @@ if test -f "$MOCK_FILE"; then
   CMD="--hbios-mocks $MOCK_FILE $CMD"
 fi
 
+STARTUP_FAILED=1
+TAILPID=
+
+function cleanup()
+{
+  if [ $TAILPID ]; then
+    kill $TAILPID
+  fi
+  if [ "$STARTUP_FAILED" == "1" ]; then
+    cat /tmp/output.txt
+  fi
+}
+
+trap cleanup EXIT
+
+set -e
 sudo screen -d -m -L -Logfile /tmp/output.txt -S "bbcbasictestrunner" cpm $CMD
 sudo screen -r bbcbasictestrunner -p0 -X logfile flush 0
 input="${TEST_RUNNER_DIR}${SCRIPT_TO_RUN}.bas"
 sudo screen -S bbcbasictestrunner -p 0 -X stuff "BBCBASIC^M"
+set +e
+STARTUP_FAILED=0
 
 if [ "$TAIL" != "no-tail" ]; then
   tail -F -n50 /tmp/output.txt &
   tailpid=$!
-
-  function cleanup()
-  {
-    kill $tailpid
-  }
-
-  trap cleanup EXIT
 fi
 
 while IFS= read -r line
