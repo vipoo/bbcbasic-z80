@@ -35,7 +35,7 @@ function cleanup()
 trap cleanup EXIT
 
 set -e
-sudo screen -d -m -L -Logfile /tmp/output.txt -S "bbcbasictestrunner" cpm $CMD
+sudo screen -d -m -L -Logfile /tmp/output.txt -S "bbcbasictestrunner" $(which cpm) $CMD
 sudo screen -r bbcbasictestrunner -p0 -X logfile flush 0
 input="${TEST_RUNNER_DIR}${SCRIPT_TO_RUN}.bas"
 sudo screen -S bbcbasictestrunner -p 0 -X stuff "BBCBASIC^M"
@@ -44,7 +44,7 @@ STARTUP_FAILED=0
 
 if [ "$TAIL" != "no-tail" ]; then
   tail -F -n50 /tmp/output.txt &
-  tailpid=$!
+  TAILPID=$!
 fi
 
 while IFS= read -r line
