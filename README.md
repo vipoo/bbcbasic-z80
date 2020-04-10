@@ -1,5 +1,7 @@
 # BBC BASIC+ for Z80
 
+> [![Build Status](https://travis-ci.org/vipoo/bbcbasic-z80.svg?branch=dean%2Fdevelop)](https://travis-ci.org/vipoo/bbcbasic-z80)
+
 This is modified source code based on [BBC BASIC (Z80)](http://www.bbcbasic.co.uk/bbcbasic/z80basic.html) by R.T. Russell, who [kindly agreed](http://cowlark.com/2019-06-14-bbcbasic-opensource/index.html) to release the original sources under the [zlib](COPYING) license at the request of David Given.  David published the sources as part of his [cpmish](https://github.com/davidgiven/cpmish) project.
 
 The original sources released by R.T. Russell are in the initial commit.  I have made the following modifications:
