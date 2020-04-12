@@ -1,7 +1,14 @@
 #!/bin/bash
 
-X=$(grep -c "$2" ../.test-output.txt)
+NEXT_WAIT_TIME=0
+until [ $(grep -c "$2" /tmp/output.txt) == "$1" ] || [ $NEXT_WAIT_TIME -eq 4 ]; do
+  (( NEXT_WAIT_TIME++ ))
+  sleep 0.25
+done
+
+X=$(grep -c "$2" /tmp/output.txt)
 if [ "$X" != "$1" ]; then
+  echo -e "expected $1 but got $X counts"
   exit 1
 fi
 

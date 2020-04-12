@@ -1,5 +1,0 @@
-#!/bin/bash
-
-set -e
-
-grep "$1" ../.test-output.txt > /dev/null

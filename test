@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set +x
+
 TEST_RUNNER_DIR=./tests-fixtures/
 SCRIPT_TO_RUN=$1
 TAIL=${2}
@@ -37,22 +39,59 @@ trap cleanup EXIT
 set -e
 sudo screen -d -m -L -Logfile /tmp/output.txt -S "bbcbasictestrunner" $(which cpm) $CMD
 sudo screen -r bbcbasictestrunner -p0 -X logfile flush 0
-input="${TEST_RUNNER_DIR}${SCRIPT_TO_RUN}.bas"
+input="${SCRIPT_TO_RUN}.bas"
 sudo screen -S bbcbasictestrunner -p 0 -X stuff "BBCBASIC^M"
 set +e
 STARTUP_FAILED=0
 
 if [ "$TAIL" != "no-tail" ]; then
-  tail -F -n50 /tmp/output.txt &
+  tail -F -n50 /tmp/output.txt 2> /dev/null &
   TAILPID=$!
 fi
 
+cd ${TEST_RUNNER_DIR}
+
 while IFS= read -r line
 do
-  sudo screen -S bbcbasictestrunner -p 0 -X stuff "${line}^M"
+
+  if [ "$TAIL" == "no-tail" ]; then
+    printf "."
+  fi
+
+  if [[ ${line:0:1} == "." ]] ; then
+    if [ "${line}" == "./clear" ]; then
+      sudo truncate -s 0 /tmp/output.txt
+    else
+      if [ "$TAIL" != "no-tail" ]; then
+        echo
+        printf "\e[33m"
+        echo ${line}
+        printf "\e[0m"
+      fi
+
+      if ! eval "$line"; then
+        echo
+        echo -e "\e[31m${line}"
+        echo -e "FAILED\e[0m"
+        exit 1
+      fi
+    fi
+
+  else
+
+    sudo screen -S bbcbasictestrunner -p 0 -X stuff "$line"
+    sudo screen -S bbcbasictestrunner -p 0 -X stuff "^M"
+
+    # NEXT_WAIT_TIME=0
+    # until tail -n 1 /tmp/output.txt | grep -q "$line" || [ $NEXT_WAIT_TIME -eq 4 ]; do
+    #   (( NEXT_WAIT_TIME++ ))
+    #   sleep 0.25
+    # done
+
+  fi
+
 done < "$input"
 
-sudo screen -S bbcbasictestrunner -p 0 -X stuff "RUN^M"
 sudo screen -S bbcbasictestrunner -p 0 -X stuff "*bye^M"
 
 ( tail -F -n50 /tmp/output.txt  & ) | grep -q "*bye"
@@ -66,15 +105,18 @@ if [ "$SCREEN_PID" != "" ]; then
   echo
   echo "Session failed to exit"
 else
-  awk '/RUN/,/efg/' /tmp/output.txt > ./.test-output.txt
-  cp /tmp/output.txt ./.full-test-output.txt
+  if [[ -f "./${SCRIPT_TO_RUN}.expect" ]]; then
+    awk '/RUN/,/efg/' /tmp/output.txt > ./.test-output.txt
+    cp /tmp/output.txt ./.full-test-output.txt
 
-  cd ./tests-fixtures
-  if ./${SCRIPT_TO_RUN}.sh ../.test-output.txt; then
-    echo "PASSED"
+    if ./${SCRIPT_TO_RUN}.expect ../.test-output.txt; then
+      echo "PASSED"
+    else
+      echo "FAILED"
+      exit 1
+    fi
   else
-    echo "FAILED"
-    exit 1
+    echo -e "\nPASSED"
   fi
 fi
 
