@@ -17,4 +17,4 @@ TEST_FILES := $(shell find ./tests-fixtures -name '*.bas')
 .PHONY: test
 
 test:
-	@./all-tests.sh
+	@./test-all
