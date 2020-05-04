@@ -5,7 +5,7 @@
 ;(C) COPYRIGHT  R.T.RUSSELL  1984
 ; extensions by Dean Netherton 2020
 
-include "config.inc"
+include "hbios.inc"
 include "constants.inc"
 
 	PUBLIC	GETIME

@@ -7,7 +7,7 @@
 ;VERSION 3.0, 01-03-1987
 ;
 
-include "config.inc"
+include "hbios.inc"
 include "constants.inc"
 include "version.inc"
 

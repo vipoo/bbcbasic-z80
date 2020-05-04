@@ -18,7 +18,7 @@
 
 ; HARDWARE FUNCTIONS
 
-include "config.inc"
+include "hbios.inc"
 include "constants.inc"
 
 VDPPORT			EQU	$BE	; Overwritten if USE_HBIOS = 1

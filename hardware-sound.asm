@@ -5,7 +5,7 @@
 ;(C) COPYRIGHT  R.T.RUSSELL  1984
 ; extensions by Dean Netherton 2020
 
-include "config.inc"
+include "hbios.inc"
 include "constants.inc"
 
 SN76489_PORT_LEFT 	EQU	$00FC	; Ports for accessing the SN76489 Chip
