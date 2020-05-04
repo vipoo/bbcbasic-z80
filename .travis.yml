@@ -25,8 +25,8 @@ before_script:
   - export ZCCCFG=`pwd`/z88dk/lib/config
 
 script:
-  - make
-  - make test
+  - make VERSION=$TRAVIS_TAG
+  - make test VERSION=$TRAVIS_TAG
 
 deploy:
   provider: releases

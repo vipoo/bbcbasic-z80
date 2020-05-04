@@ -6,3 +6,4 @@
 *.bin
 .test-output.txt
 .full-test-output.txt
+version.inc

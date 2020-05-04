@@ -9,6 +9,7 @@
 
 include "config.inc"
 include "constants.inc"
+include "version.inc"
 
 	EXTERN	XEQ
 	EXTERN	RUN0
@@ -172,8 +173,23 @@ PURGE:	LD	(HL),A		;CLEAR SCRATCHPAD
 if USE_HBIOS
 	CALL	HBIOS_INIT
 endif
+
+
 	CALL	TELL
-	DEFM	"BBC BASIC (Z80) Version 3.00  "
+	DEFM	"DINO BASIC Version "
+	DEFM	VERSIONSTAMP
+	DEFB	CR
+	DEFB	LF
+	DEFM	"Assembled Date: "
+	DEFM	BUILDTIME
+	DEFB	CR
+	DEFB	LF
+	DEFM	"(C) Copyright Dean Netherton 2020"
+	DEFB	CR
+	DEFB	LF
+	DEFB	CR
+	DEFB	LF
+	DEFM	"Based on BBC BASIC (Z80) Version 3.00  "
 	DEFB	CR
 	DEFB	LF
 NOTICE:	DEFM	"(C) Copyright R.T.Russell 1987"
