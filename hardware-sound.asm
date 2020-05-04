@@ -44,7 +44,9 @@ endif
 
 	CALL	EXPRI			; Arg C (Channel)
 	EXX
-	LD	D, L
+	LD	A, L
+	DEC	A
+	LD	D, A
 	PUSH	DE			; Save channel
 
 	CALL	COMMA ;
@@ -69,7 +71,7 @@ endif
 	OR	A
 	JR	Z, SKIP1
 
-	LD	B, SNDVOL		; Issue command to HBIOS
+	LD	B, BF_SNDVOL		; Issue command to HBIOS
 	LD	C, 0
 	RST	HBIOS
 
@@ -77,9 +79,7 @@ SKIP1:
 	CALL	COMMA
 	CALL	EXPRI			; Arg P (Pitch) 0 to 255
 	EXX
-	LD	A, L
-	LD	H, A
-	LD	L, 0			; HL contains pitch 0 to 0xFFFF
+	LD	H, 0			; HL contains pitch 0 to 0xFF
 
 	POP	DE			; restore channel
 	PUSH	DE
@@ -88,7 +88,7 @@ SKIP1:
 	OR	A
 	JR	Z, SKIP2
 
-	LD	B, SNDPIT		; Issue command to HBIOS
+	LD	B, BF_SNDNOTE		; Issue command to HBIOS
 	LD	C, 0
 	RST	HBIOS
 
@@ -103,11 +103,7 @@ SKIP2:
 	OR	A
 	JR	Z, SKIP3
 
-	LD	B, SNDDUR
-	LD	C, 0
-	RST	HBIOS
-
-	LD	B, SNDPLAY		; Issue command to HBIOS
+	LD	B, BF_SNDPLAY		; Issue command to HBIOS
 	LD	C, 0
 	RST	HBIOS
 

@@ -1,10 +1,14 @@
 #!/bin/bash
 
-set -e
+FAILED=0
 
 for i in ./tests-fixtures/*.bas; do
   filename=$(basename $i)
   filename="${filename%.*}"
-  ./test $filename no-tail
+
+  if ! ./test "$filename" "no-tail"; then
+    FAILED=1
+  fi
 done
 
+exit $FAILED

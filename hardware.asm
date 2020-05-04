@@ -21,7 +21,7 @@
 include "config.inc"
 include "constants.inc"
 
-VDPPORT			EQU	$BE	; Only used if USE_HBIOS = 1
+VDPPORT			EQU	$BE	; Overwritten if USE_HBIOS = 1
 
 	PUBLIC	CLG
 	PUBLIC	COLOUR
@@ -55,23 +55,24 @@ if USE_HBIOS
 	PUBLIC	HBIOS_INIT
 
 HBIOS_INIT:
-	PUSH	AF		; Retrieve TMS9918 Ports
-	CALL	TELL
-	DEFM	"Retriving ports from HBIOS"
-	DEFB	CR
-	DEFB	LF
-	DEFB	0
+	; Using default ports for moment - version 3.1.pre.15 does not support this HBIOS call
+;	PUSH	AF		; Retrieve TMS9918 Ports
+	; CALL	TELL
+	; DEFM	"Retriving ports from HBIOS"
+	; DEFB	CR
+	; DEFB	LF
+	; DEFB	0
 
-	LD      B, VDAIO
-	LD      C, 0
-	RST     HBIOS
-	LD	C, D
-	LD	B, 0
-	LD	(VDPADR), BC
+	; LD      B, VDAIO
+	; LD      C, 0
+	; RST     HBIOS
+	; LD	C, D
+	; LD	B, 0
+	; LD	(VDPADR), BC
 
 	CALL	SOUND_INIT
 
-	POP	AF
+;	POP	AF
 	RET
 endif
 
@@ -221,7 +222,7 @@ PUTIMS:
 ; VDP state
 
 if USE_HBIOS
-VDPADR:	DEFB	0		; VDP base port
+VDPADR:	DEFB	VDPPORT		; VDP base port
 	DEFB	0		; Retrieved from HBIOS call
 else
 VDPADR:	DEFB	VDPPORT		; VDP base port
