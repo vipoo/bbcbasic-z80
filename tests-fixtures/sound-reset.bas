@@ -1,3 +1,7 @@
+REM MOCK: SYSGET SNDCNT sound adapter installed.
+> B:F8 C:50
+< E:01
+
 10 SOUND 0, 0, 1, 1
 20 SOUND 1, 0, 2, 1
 30 SOUND 2, 0, 3, 1

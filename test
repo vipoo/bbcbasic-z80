@@ -5,7 +5,7 @@ set +x
 TEST_RUNNER_DIR=./tests-fixtures/
 SCRIPT_TO_RUN=$1
 TAIL=${2}
-MOCK_FILE=${TEST_RUNNER_DIR}${SCRIPT_TO_RUN}.mock
+MOCK_FILE=${TEST_RUNNER_DIR}${SCRIPT_TO_RUN}.bas
 
 sudo rm -f /tmp/output.txt
 
@@ -79,14 +79,16 @@ do
 
   else
 
-    sudo screen -S bbcbasictestrunner -p 0 -X stuff "$line"
-    sudo screen -S bbcbasictestrunner -p 0 -X stuff "^M"
+    if [[ ${line:0:1} != "<" && ${line:0:1} != ">" ]]; then
+      sudo screen -S bbcbasictestrunner -p 0 -X stuff "$line"
+      sudo screen -S bbcbasictestrunner -p 0 -X stuff "^M"
 
-    # NEXT_WAIT_TIME=0
-    # until tail -n 1 /tmp/output.txt | grep -q "$line" || [ $NEXT_WAIT_TIME -eq 4 ]; do
-    #   (( NEXT_WAIT_TIME++ ))
-    #   sleep 0.25
-    # done
+      # NEXT_WAIT_TIME=0
+      # until tail -n 1 /tmp/output.txt | grep -q "$line" || [ $NEXT_WAIT_TIME -eq 4 ]; do
+      #   (( NEXT_WAIT_TIME++ ))
+      #   sleep 0.25
+      # done
+    fi
 
   fi
 
