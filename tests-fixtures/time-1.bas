@@ -1,10 +1,14 @@
-10 TIME = 0
+> B:F8 C:D0
+< A:00 D:00 E:00 H:00 L:3C
+> B:F9 C:D0
+< A:00
 
-22 PRINT "T1:"; TIME
-30 PRINT "T2:"; TIME
+10 TIME = 100
+20 T=TIME
+40 PRINT "TIME: "; T
 
 RUN
 
-./expect 1 'T1:3'
-./expect 1 'T2:9'
+./expect 1 'HBIOS: BF_SYSSET, Subfunction: in C D0, DE:HL: 0000:003C'
+./expect 1 'TIME: 100'
 

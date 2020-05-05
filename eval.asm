@@ -90,6 +90,8 @@ include "constants.inc"
 	EXTERN	ADVAL
 ;
 	EXTERN	FPP
+
+	EXTERN	HEXSTR
 ;
 ;TABLE OF ADDRESSES FOR FUNCTIONS:
 ;

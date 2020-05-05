@@ -1,0 +1,10 @@
+> B:F8 C:D0
+< A:00 D:00 E:10 H:00 L:00
+
+20 T=TIME
+40 PRINT "TIME: "; T
+
+RUN
+
+./expect 1 'TIME: 1747626'
+
