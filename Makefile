@@ -2,15 +2,21 @@ SRCS = main.asm exec.asm eval.asm fpp.asm hardware.asm hardware-sound.asm hardwa
 
 INCS := $(shell find . -name '*.inc')
 
-bbcbasic.com: $(SRCS) $(INCS) version.inc
-	$(MAKE) clean-lib
-	z80asm -obbcbasic.com -b -d -l -m $(SRCS)
+bbcbasic.com: bbcbasic.asm _bbcbasic.com
+	z80asm -obbcbasic.com -b bbcbasic.asm
+
+_bbcbasic.com: $(SRCS) $(INCS) version.inc
+	@rm -f consts.inc
+	@touch consts.inc
+	@z80asm -o_bbcbasic.com -g -DFIRSTPASS $(SRCS)
+	@./consts.sh
+	z80asm -o_bbcbasic.com -b -DSECONDPASS --reloc-info $(SRCS)
 
 clean-lib:
 	rm -f *.o *.err *.lis *.map
 
 clean:
-	rm -f *.o *.err *.lis *.map *.com *.bin
+	rm -f *.o *.err *.lis *.map *.com *.bin *.reloc
 
 TEST_FILES := $(shell find ./tests-fixtures -name '*.bas')
 

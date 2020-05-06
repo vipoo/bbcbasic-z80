@@ -19,7 +19,7 @@ include "constants.inc"
 	EXTERN	SFLOAT
 	EXTERN	COPY
 	EXTERN	SWAP
-
+	EXTERN 	TELL
 TIMETICKQUICK:
 	RET
 
@@ -30,6 +30,11 @@ TIMETICK:
 ;  	  Outputs: DEHL = elapsed time (centiseconds)
 ; 	  Destroys: A,D,E,H,L,F
 GETIME:
+	CALL	TELL
+	DEFM	"1111"
+	DEFB	13
+	DEFB	10
+	DEFB	0
 	LD	BC, SYSGET_TIMER
 	CALL_HBIOS	; DE:HL
 

@@ -39,6 +39,7 @@ EXPRNG	EQU	24		;Exp range
 	PUBLIC	FDIV
 	PUBLIC	SFLOAT
 	PUBLIC	COPY
+	PUBLIC	NUMTOSTR
 ;
 ;Call entry and despatch code:
 ;
@@ -126,7 +127,7 @@ FTABLE:	DEFW	ABS		;ABS
 	DEFW	PI		;PI
 ;
 	DEFW	VAL		;VAL
-	DEFW	STR		;STR$
+	DEFW	NUMTOSTR		;NUMTOSTR$
 ;
 	DEFW	SFIX		;FIX
 	DEFW	SFLOAT		;FLOAT
@@ -1184,15 +1185,18 @@ ACS:	CALL	ASN
 	PUSH	AF
 	JR	ACS1
 ;
-;Function STR - convert numeric value to ASCII string.
+;Function NUMTOSTR - convert numeric value to ASCII string.
 ;   Inputs: HLH'L'C = integer or floating-point number
 ;           DE = address at which to store string
 ;           IX = address of @% format control
-;  Outputs: String stored, with NUL terminator
+;  Outputs: String stored
+;	    B = length of string
+;	    DE = byte after last char
 ;
 ;First normalise for decimal output:
 ;
-STR:	CALL	SFLOAT
+NUMTOSTR:
+	CALL	SFLOAT
 	LD	B,0		;DEFAULT PT. POSITION
 	BIT	7,H		;NEGATIVE?
 	JR	Z,STR10

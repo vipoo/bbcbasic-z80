@@ -7,7 +7,19 @@
 ;**  NEW TO THIS VERSION
 ;
 
+restart	equ	$0000		; CP/M restart vector
+bdos	equ	$0005		; BDOS invocation vector
+
 include "constants.inc"
+
+IFDEF FIRSTPASS
+	DEFC __TABLEEND=0
+	DEFC __TABLE=0
+	PUBLIC	CONST_TABLEEND
+	PUBLIC	CONST_TABLE
+ELSE
+	include "consts.inc"
+ENDIF
 
 	PUBLIC	OSINIT
 	PUBLIC	OSRDCH
@@ -30,6 +42,12 @@ include "constants.inc"
 	PUBLIC	TRAP
 	PUBLIC	OSKEY
 	PUBLIC	OSCALL
+
+	PUBLIC	prthex
+	PUBLIC	PRTHEXWORDDE
+	PUBLIC	PRTHEXWORDBC
+	PUBLIC	PRTHEXWORDHL
+	PUBLIC	crlf
 ;
 	EXTERN	ESCAPE
 	EXTERN	EXTERR
@@ -44,6 +62,7 @@ include "constants.inc"
 	EXTERN	HIMEM
 	EXTERN	ERRLIN
 	EXTERN	USER
+
 ;
 ;OSSAVE - Save an area of memory to a file.
 ;   Inputs: HL addresses filename (term CR)
@@ -1458,6 +1477,110 @@ WONTGO:	DEC	L
 	CALL	OSWRCH		;BEEP!
 STOP:	LD	C,0		;STOP REPEAT
 	RET
+
+
+
+
+;===============================================================================
+; Print a $ terminated string at (HL) without destroying any registers
+prtstrz:
+	LD	a, (hl)			; get next char
+	INC	hl
+	CP	'$'
+	RET	z
+	CALL	prtchr
+	JR	prtstrz
+;
+; PRINT THE HEX WORD VALUE IN HL
+;
+PRTHEXWORDHL:
+	PUSH	AF
+	LD	A,H
+	CALL	prthex
+	LD	A,L
+	CALL	prthex
+	POP	AF
+	RET
+
+
+PRTHEXWORDDE:
+	PUSH DE
+	PUSH DE
+	POP HL
+	CALL PRTHEXWORDHL
+	POP DE
+	RET
+
+PRTHEXWORDBC:
+	PUSH BC
+	PUSH BC
+	POP HL
+	CALL PRTHEXWORDHL
+	POP BC
+	RET
+
+prtchr:
+	push	af
+	push	iy
+	PUSH	bc			; save registers
+	PUSH	de
+	PUSH	hl
+	LD	e, a			; character to print in E
+	LD	c, $02			; BDOS function to output a character
+	CALL	bdos			; do it
+	POP	hl			; restore registers
+	POP	de
+	POP	bc
+	pop	iy
+	pop	af
+	RET
+
+prthex:
+	PUSH	af			; save AF
+	PUSH	de			; save DE
+	CALL	hexascii		; convert value in A to hex chars in DE
+	LD	a, d			; get the high order hex char
+	CALL	prtchr			; print it
+	LD	a, e			; get the low order hex char
+	CALL	prtchr			; print it
+	POP	de			; restore DE
+	POP	af			; restore AF
+	RET				; done
+
+hexascii:
+	LD	d, a			; save A in D
+	CALL	hexconv			; convert low nibble of A to hex
+	LD	e, a			; save it in E
+	LD	a, d			; get original value back
+	RLCA				; rotate high order nibble to low bits
+	RLCA
+	RLCA
+	RLCA
+	CALL	hexconv			; convert nibble
+	LD	d, a			; save it in D
+	RET				; done
+
+;===============================================================================
+; Convert low nibble of A to ascii hex
+
+hexconv:
+	AND	$0F	     		; low nibble only
+	ADD	a, $90
+	DAA
+	ADC	a, $40
+	DAA
+	RET
+
+;===============================================================================
+; Start a new line
+
+crlf:
+	LD	a, 13			; <CR>
+	CALL	prtchr			; print it
+	LD	a, 10			; <LF>
+	JR	prtchr			; print it
+
+
 ;
 ;
 EDITST:	DEFM	"EDIT"
@@ -1490,9 +1613,11 @@ FCBSIZ	EQU	128+36+2
 TIME:	DEFS	4
 ;
 TRPCNT:	DEFB	10
+CONST_TABLE:
 TABLE:	DEFS	16		;FILE BLOCK POINTERS
 FLAGS:	DEFB	0
 INKEY:	DEFB	0
 EDPTR:	DEFW	0
 OPTVAL:	DEFB	0
-INILEN	EQU	$-TABLE
+CONST_TABLEEND:
+INILEN	EQU	__TABLEEND - __TABLE	;$-TABLE; RELOC-WORK-AROUND
