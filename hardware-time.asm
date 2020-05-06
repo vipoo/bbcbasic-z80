@@ -26,9 +26,9 @@ TIMETICKQUICK:
 TIMETICK:
 	RET
 
-;GETIME	- Read elapsed-time clock.
-;  	  Outputs: DEHL = elapsed time (centiseconds)
-; 	  Destroys: A,D,E,H,L,F
+; Read elapsed-time clock.
+;	Outputs: DEHL = elapsed time (centiseconds)
+;	Destroys: A,D,E,H,L,F
 GETIME:
 	LD	BC, SYSGET_TIMER
 	CALL_HBIOS	; DE:HL
@@ -60,9 +60,9 @@ GETIME:
 	CALL	INT_TO_DEHL
 	RET
 
-;PUTIME	- Load elapsed-time clock.
-;	  Inputs: DEHL = time to load (centiseconds)
-; 	  Destroys: A,D,E,H,L,F
+; Load elapsed-time clock.
+;	Inputs: DEHL = time to load (centiseconds)
+; 	Destroys: A,D,E,H,L,F
 PUTIME:
 	CALL	DEHL_TO_INT
 	CALL	SFLOAT

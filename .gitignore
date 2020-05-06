@@ -7,3 +7,8 @@
 .test-output.txt
 .full-test-output.txt
 version.inc
+_bbcbasic.reloc
+_bbcbasic.com
+consts.inc
+*.def
+*.sym
