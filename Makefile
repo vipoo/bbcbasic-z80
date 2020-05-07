@@ -10,7 +10,7 @@ _bbcbasic.com: $(SRCS) $(INCS) version.inc
 	@touch consts.inc
 	@z80asm -o_bbcbasic.com -g -DFIRSTPASS $(SRCS)
 	@./consts.sh
-	z80asm -o_bbcbasic.com -b -DSECONDPASS --reloc-info -v $(SRCS)
+	z80asm -o_bbcbasic.com -b -DSECONDPASS --reloc-info  $(SRCS)
 
 clean-lib:
 	rm -f *.o *.err *.lis *.map

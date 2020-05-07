@@ -1,4 +1,5 @@
 
+BDOS	EQU	5
 
 IFDEF TRACING
 
@@ -6,7 +7,7 @@ IFDEF TRACING
 	PUBLIC	PRTHEXWORDDE
 	PUBLIC	PRTHEXWORDBC
 	PUBLIC	PRTHEXWORDHL
-	PUBLIC	CRLF
+	PUBLIC	NEWLINE
 
 ;===============================================================================
 ; PRINT A $ TERMINATED STRING AT (HL) WITHOUT DESTROYING ANY REGISTERS
@@ -100,7 +101,7 @@ HEXCONV:
 ;===============================================================================
 ; START A NEW LINE
 
-CRLF:
+NEWLINE:
 	LD	A, 13			; <CR>
 	CALL	PRTCHR			; PRINT IT
 	LD	A, 10			; <LF>
