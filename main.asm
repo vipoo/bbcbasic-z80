@@ -212,7 +212,8 @@ endif
 	LD	SP, (HIMEM)
 	LD	HL, (HIMEM)
 	LD	DE, (PAGE)
-	SUB	HL, DE
+	OR	A
+	SBC	HL, DE
 	CALL	PRTHL
 	CALL	TELL
 	DEFM	" Free bytes"
