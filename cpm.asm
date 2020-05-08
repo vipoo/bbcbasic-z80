@@ -54,7 +54,6 @@ ENDIF
 	EXTERN	FREE
 	EXTERN	HIMEM
 	EXTERN	ERRLIN
-	EXTERN	USER
 ;
 ;OSSAVE - Save an area of memory to a file.
 ;   Inputs: HL addresses filename (term CR)
@@ -1081,9 +1080,6 @@ CLRTAB:	LD	(HL),A		;CLEAR FILE TABLE ETC.
 	LDIR			;COPY TO ACC$
 NOBOOT:	EX	DE,HL
 	LD	(HL),CR
-	LD	DE,(6)		;DE = HIMEM
-	LD	E,A		;PAGE BOUNDARY
-	LD	HL,USER
 	RET
 ;
 ;BYE - Stop interrupts and return to CP/M.
