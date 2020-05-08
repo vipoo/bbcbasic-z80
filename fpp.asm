@@ -40,6 +40,7 @@ EXPRNG	EQU	24		;Exp range
 	PUBLIC	SFLOAT
 	PUBLIC	COPY
 	PUBLIC	NUMTOSTR
+	PUBLIC	SUB
 ;
 ;Call entry and despatch code:
 ;

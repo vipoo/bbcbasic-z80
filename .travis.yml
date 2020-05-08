@@ -15,9 +15,9 @@ install:
   - wget https://github.com/vipoo/z88dk/releases/download/v2.0.0-dino.2/z88dk-v2.0.0-dino.2.tar.gz
   - mkdir -p z88dk
   - tar -xzvf z88dk-v2.0.0-dino.2.tar.gz -C ./z88dk/
-  - wget https://github.com/vipoo/cpm/releases/download/v0.0.4/cpm-v0.0.4.tar.gz
+  - wget https://github.com/vipoo/cpm/releases/download/v0.0.4/cpm-v0.0.5.tar.gz
   - mkdir -p cpm
-  - tar -xzvf cpm-v0.0.4.tar.gz -C ./cpm
+  - tar -xzvf cpm-v0.0.5.tar.gz -C ./cpm
 
 before_script:
   - export PATH=`pwd`/cpm/bin:$PATH

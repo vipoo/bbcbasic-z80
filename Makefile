@@ -1,4 +1,5 @@
 SRCS = main.asm exec.asm eval.asm fpp.asm hardware.asm hardware-sound.asm hardware-time.asm cpm.asm ram.asm
+#tracing.asm
 
 INCS := $(shell find . -name '*.inc')
 
@@ -10,7 +11,8 @@ _bbcbasic.com: $(SRCS) $(INCS) version.inc
 	@touch consts.inc
 	@z80asm -o_bbcbasic.com -g -DFIRSTPASS $(SRCS)
 	@./consts.sh
-	z80asm -o_bbcbasic.com -b -DSECONDPASS --reloc-info  $(SRCS)
+	z80asm -o_bbcbasic.com -b -v -l -DSECONDPASS --reloc-info  $(SRCS)
+#-DTRACING
 
 clean-lib:
 	rm -f *.o *.err *.lis *.map
