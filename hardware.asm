@@ -21,7 +21,7 @@
 include "hbios.inc"
 include "constants.inc"
 
-VDPPORT			EQU	$BE	; Overwritten if USE_HBIOS = 1
+VDPPORT			EQU	$BE	; default port
 
 	PUBLIC	CLG
 	PUBLIC	COLOUR
@@ -51,7 +51,6 @@ VDPPORT			EQU	$BE	; Overwritten if USE_HBIOS = 1
 	EXTERN	PUTIME
 	EXTERN	SOUND_INIT
 
-if USE_HBIOS
 	PUBLIC	HBIOS_INIT
 
 HBIOS_INIT:
@@ -71,10 +70,8 @@ HBIOS_INIT:
 	; LD	(VDPADR), BC
 
 	CALL	SOUND_INIT
-
 ;	POP	AF
 	RET
-endif
 
 ;CLRSCN	- Clear screen.
 ;	  (Alter characters to suit your VDU)
@@ -221,13 +218,8 @@ PUTIMS:
 
 ; VDP state
 
-if USE_HBIOS
-VDPADR:	DEFB	VDPPORT		; VDP base port
-	DEFB	0		; Retrieved from HBIOS call
-else
 VDPADR:	DEFB	VDPPORT		; VDP base port
 VDPINT:	DEFB	0		; 0 = NMI, 1 = INT
-endif
 
 CMODE:	DEFB	2		; Current graphics mode
 CGCOL:	DEFB	0F0H		; Current graphics color

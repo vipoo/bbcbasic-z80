@@ -8,7 +8,7 @@
 ;
 
 restart	equ	$0000		; CP/M restart vector
-bdos	equ	$0005		; BDOS invocation vector
+;bdos	equ	$0005		; BDOS invocation vector
 
 include "constants.inc"
 
