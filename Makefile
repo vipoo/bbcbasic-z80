@@ -12,6 +12,7 @@ bbcbasic.com: bbcbasic.asm _bbcbasic.com
 	gpp --includemarker "; #include line: %, file:%" -n  $(DEFINES) -o $@ $<
 
 consts._inc: $(SRCS) $(INCS)
+	$(MAKE) version._inc
 	@rm -f consts._inc
 	@touch consts._inc
 	@z80asm -o_bbcbasic.com -g -DFIRSTPASS $(SRCS)
@@ -25,7 +26,7 @@ clean-lib:
 	rm -f *.o *.err *.lis *.map
 
 clean:
-	rm -f *.o *.err *.lis *.map *.com *.bin *.reloc
+	rm -f *.o *.err *.lis *.map *.com *.bin *.reloc *._inc
 
 TEST_FILES := $(shell find ./tests-fixtures -name '*.bas')
 
