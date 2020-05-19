@@ -8,16 +8,18 @@ DEFINES=
 bbcbasic.com: bbcbasic.asm _bbcbasic.com
 	z80asm -obbcbasic.com -b bbcbasic.asm
 
-%.asmpp: %.asm
+%.asmpp: %.asm $(INCS)
 	gpp --includemarker "; #include line: %, file:%" -n  $(DEFINES) -o $@ $<
 
-_bbcbasic.com: $(SRCS) $(INCS) version.inc
-	@rm -f consts.inc
-	@touch consts.inc
+consts._inc: $(SRCS) $(INCS)
+	@rm -f consts._inc
+	@touch consts._inc
 	@z80asm -o_bbcbasic.com -g -DFIRSTPASS $(SRCS)
 	@./consts.sh
-	z80asm -o_bbcbasic.com -b -v -l ${DEFINES} -DSECONDPASS --reloc-info  $(SRCS)
-#-DTRACING
+
+_bbcbasic.com: $(SRCS) $(INCS) consts._inc
+	$(MAKE) version._inc
+	z80asm -o_bbcbasic.com -b -l ${DEFINES} -DSECONDPASS --reloc-info  $(SRCS)
 
 clean-lib:
 	rm -f *.o *.err *.lis *.map
@@ -34,7 +36,7 @@ test:
 
 VERSION ?= "0.0.0"
 BUILDTIME := $(shell date --rfc-3339=seconds)
-.PHONY: version.inc
-version.inc:
+.PHONY: version._inc
+version._inc:
 	@echo "#define VERSIONSTAMP \"${VERSION}\"\n" > $@ && \
 	echo "#define BUILDTIME \"${BUILDTIME}\"\n" >> $@

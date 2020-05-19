@@ -7,9 +7,11 @@
 .test-output.txt
 .full-test-output.txt
 version.inc
+version._inc
 _bbcbasic.reloc
 _bbcbasic.com
 consts.inc
+consts._inc
 *.def
 *.sym
 *.asmpp

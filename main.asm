@@ -9,7 +9,7 @@
 
 include "hbios.inc"
 include "constants.inc"
-include "version.inc"
+include "version._inc"
 
 IFDEF FIRSTPASS
 	DEFC __KEYWDSEND = 0
@@ -25,7 +25,7 @@ IFDEF FIRSTPASS
 	PUBLIC	CONST_LIST2
 	PUBLIC	CONST_LIST2END
 ELSE
-	include "consts.inc"
+	include "consts._inc"
 ENDIF
 
 	EXTERN	XEQ

@@ -30,7 +30,7 @@ IFDEF FIRSTPASS
 	PUBLIC CONST_FUNCTBLEND
 	PUBLIC CONST_FUNCTBL
 ELSE
-	include "consts.inc"
+	include "consts._inc"
 ENDIF
 
 	PUBLIC	EXPR

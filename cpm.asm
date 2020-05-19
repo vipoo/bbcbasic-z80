@@ -18,7 +18,7 @@ IFDEF FIRSTPASS
 	PUBLIC	CONST_TABLEEND
 	PUBLIC	CONST_TABLE
 ELSE
-	include "consts.inc"
+	include "consts._inc"
 ENDIF
 
 	PUBLIC	OSINIT

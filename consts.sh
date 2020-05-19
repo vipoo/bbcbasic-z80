@@ -4,7 +4,7 @@ X="DEFC __"
 
 #set -x
 
-echo "; 3rd parse generated constants: " > ./consts.inc
+echo "; 3rd parse generated constants: " > ./consts._inc
 
 input="main.def"
 while IFS= read -r line
@@ -15,7 +15,7 @@ do
 
   exportline="${line/DEFC CONST_/$X}"
 
-  echo $exportline >> ./consts.inc
+  echo $exportline >> ./consts._inc
 
 done < "$input"
 
