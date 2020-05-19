@@ -10,6 +10,8 @@ git:
   depth: 3
 
 before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install gpp
 
 install:
   - wget https://github.com/vipoo/z88dk/releases/download/v2.0.0-dino.2/z88dk-v2.0.0-dino.2.tar.gz

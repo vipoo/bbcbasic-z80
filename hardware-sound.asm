@@ -7,6 +7,7 @@
 
 include "hbios.inc"
 include "constants.inc"
+#include "tracing.inc"
 
 	PUBLIC	SOUND
 	PUBLIC	SOUND_INIT
@@ -25,6 +26,7 @@ include "constants.inc"
 	EXTERN	CENTSTOTICKS
 	EXTERN	ERROR
 	EXTERN	AUD_TIMERTICK
+	EXTERN	PRTSTRD
 
 SOUND_INIT:
 	LD	BC, SYSGET_SNDCNT	; RETRIEVE SOUND DRIVER COUNTS
@@ -188,8 +190,8 @@ AUD_PLAY2:
 
 AUD_DURATION:
 	;HL = HL * freq / 100
-	LD	a, (TICKFREQ)		; TODO: LOSING ACCURACY - HANDLER 0, 1, ETC
-	ld	c, a
+	LD	A, (TICKFREQ)		; TODO: LOSING ACCURACY - HANDLER 0, 1, ETC
+	ld	C, A
 	LD	DE, 0
 	CALL	CENTSTOTICKS
 
@@ -197,6 +199,8 @@ AUD_DURATION:
 	LD	(IX + QUEUED_DUR + 1), H
 	LD	(IX + QUEUED_TAR), L
 	LD	(IX + QUEUED_TAR + 1), H
+
+
 	RET
 
 ; -------------------------------

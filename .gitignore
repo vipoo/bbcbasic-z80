@@ -12,3 +12,4 @@ _bbcbasic.com
 consts.inc
 *.def
 *.sym
+*.asmpp
