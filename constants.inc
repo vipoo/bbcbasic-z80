@@ -1,14 +1,14 @@
 
 QUEUED_CMD	EQU	0
-QUEUED_FLAGS	EQU	QUEUED_CMD
-QUEUED_CHAN	EQU	QUEUED_CMD + 1		; 1 byte for channel - top bit indicates currently playing/or queued for playing
-QUEUED_VOL	EQU	QUEUED_CMD + 2		; 1 byte for vol
-QUEUED_NOTE	EQU	QUEUED_CMD + 3		; 1 byte for NOTE
-QUEUED_DUR	EQU	QUEUED_CMD + 4		; 2 byte for duration
-QUEUED_TAR	EQU	QUEUED_CMD + 6		; 2 byte for target time
-QUEUED_CMD_SIZE	EQU	QUEUED_CMD + 8
+QUEUED_FLAGS	EQU	0
+QUEUED_CHAN	EQU	1		; 1 byte for channel - top bit indicates currently playing/or queued for playing
+QUEUED_VOL	EQU	2		; 1 byte for vol
+QUEUED_NOTE	EQU	3		; 1 byte for NOTE
+QUEUED_DUR	EQU	4		; 2 byte for duration
+QUEUED_TAR	EQU	6		; 2 byte for target time
+QUEUED_CMD_SIZE	EQU	8
 
-QUEUED_CMD_CNT	EQU	4			; MAX NUMBER OF QUEUED COMMANDS
+QUEUED_CMD_CNT	EQU	16			; MAX NUMBER OF QUEUED COMMANDS
 
 AUD_BFFREE	EQU	0			; IF ALL BITS UNSET - BUFFER IS FREE
 AUD_BFALLOC	EQU	1			; BUFFER HAS BEEN CLAIMED FOR USE.  		NEXT STATE -> AUD_BFPLAY OR AUD_BFQUED

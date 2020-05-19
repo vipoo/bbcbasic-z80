@@ -2,7 +2,7 @@ REM MOCK: SYSGET SNDCNT sound adapter installed.
 > B:F8 C:50
 < E:01
 
-10 SOUND 1, -8, 16, 17185
+10 SOUND 1, -8, 16, 10000
 RUN
 
 ./expect 1 'HBIOS: BF_SNDVOL, Driver in C 00, Volume in L: 88'
