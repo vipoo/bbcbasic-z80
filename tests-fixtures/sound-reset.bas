@@ -10,10 +10,10 @@ REM MOCK: SYSGET SNDCNT sound adapter installed.
 RUN
 
 ./expect 4 'HBIOS: BF_SNDVOL, Driver in C 00, Volume in L: 00'
-./expect 1 'HBIOS: BF_SNDNOTE, Driver in C 00, Note in HL: 0001'
-./expect 1 'HBIOS: BF_SNDNOTE, Driver in C 00, Note in HL: 0002'
-./expect 1 'HBIOS: BF_SNDNOTE, Driver in C 00, Note in HL: 0003'
-./expect 1 'HBIOS: BF_SNDNOTE, Driver in C 00, Note in HL: 0004'
+./expect 1 'HBIOS: BF_SNDNOTE, Driver in C 00, Note in HL: 0031'
+./expect 1 'HBIOS: BF_SNDNOTE, Driver in C 00, Note in HL: 0032'
+./expect 1 'HBIOS: BF_SNDNOTE, Driver in C 00, Note in HL: 0033'
+./expect 1 'HBIOS: BF_SNDNOTE, Driver in C 00, Note in HL: 0034'
 
 ./expect 1 'HBIOS: BF_SNDPLAY, Driver in C 00, Channel in D: FF'
 ./expect 1 'HBIOS: BF_SNDPLAY, Driver in C 00, Channel in D: 00'
