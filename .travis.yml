@@ -21,7 +21,7 @@ install:
   - mkdir -p cpm
   - tar -xzvf cpm-v0.0.5.tar.gz -C ./cpm
   - mkdir -p apploader
-  - cd apploader && wget https://github.com/vipoo/apploader/releases/download/v0.0.2/apploader && cd ..
+  - cd apploader && wget https://github.com/vipoo/apploader/releases/download/v0.0.3/apploader && cd ..
 
 before_script:
   - export PATH=`pwd`/apploader/:$PATH
