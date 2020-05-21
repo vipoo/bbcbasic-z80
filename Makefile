@@ -3,17 +3,12 @@ SRCS = main.asm exec.asm eval.asm fpp.asm hardware.asm hardware-sound.asmpp hard
 INCS := $(shell find . -name '*.inc')
 
 ASSEMBLER=apploader
-ASSFLAGS=-b -DTRACING
+ASSFLAGS=-b --page-align
+#-DTRACING
 
 bbcbasic.com: $(SRCS)
 	$(MAKE) version._inc
 	$(ASSEMBLER) -obbcbasic.com ${ASSFLAGS} $(SRCS)
-#	z80asm -obbcbasic.com -b bbcbasic.asm
-
-# bbcbasic.bin: $(SRCS) $(INCS) consts._inc
-# 	$(MAKE) version._inc
-# 	z80asm -obbcbasic.bin -b -l ${DEFINES} -DSECONDPASS --reloc-info  $(SRCS)
-
 
 %.asmpp: %.asm $(INCS)
 	gpp --includemarker "; #include line: %, file:%" -n  $(DEFINES) -o $@ $<
