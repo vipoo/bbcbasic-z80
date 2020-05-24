@@ -1,4 +1,4 @@
-SRCS = main.asm exec.asm eval.asm fpp.asm hardware.asm hardware-sound.asmpp hardware-time.asm cpm.asm ram.asm tracing.asm
+SRCS = main.asmpp exec.asmpp eval.asmpp fpp.asm hardware.asm hardware-sound.asmpp hardware-time.asm cpm.asm ram.asm tracing.asm
 
 INCS := $(shell find . -name '*.inc')
 
@@ -11,7 +11,12 @@ bbcbasic.com: $(SRCS)
 	$(ASSEMBLER) -obbcbasic.com ${ASSFLAGS} $(SRCS)
 
 %.asmpp: %.asm $(INCS)
-	gpp --includemarker "; #include line: %, file:%" -n  $(DEFINES) -o $@ $<
+	@gpp --includemarker "; #include line: %, file:%" \
+			+ciii ";" "\n" \
+			-U "" "" "(" "," ")" "(" ")" "#" "!" \
+			-M "#" "\n" " " " " "\n" "(" ")" \
+			+n $(DEFINES) \
+			-o $@ $<
 
 clean-lib:
 	rm -f *.o *.err *.lis *.map
