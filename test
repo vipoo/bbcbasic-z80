@@ -62,18 +62,23 @@ do
     if [ "${line}" == "./clear" ]; then
       sudo truncate -s 0 /tmp/output.txt
     else
-      if [ "$TAIL" != "no-tail" ]; then
-        echo
-        printf "\e[33m"
-        echo ${line}
-        printf "\e[0m"
-      fi
+      if [ "${line}" == ".ESC" ]; then
+        sudo screen -S bbcbasictestrunner -p 0 -X stuff "^["
 
-      if ! eval "$line"; then
-        echo
-        echo -e "\e[31m${line}"
-        echo -e "FAILED\e[0m"
-        exit 1
+      else
+        if [ "$TAIL" != "no-tail" ]; then
+          echo
+          printf "\e[33m"
+          echo ${line}
+          printf "\e[0m"
+        fi
+
+        if ! eval "$line"; then
+          echo
+          echo -e "\e[31m${line}"
+          echo -e "FAILED\e[0m"
+          exit 1
+        fi
       fi
     fi
 

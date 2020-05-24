@@ -15,3 +15,4 @@ consts._inc
 *.def
 *.sym
 *.asmpp
+test.txt
