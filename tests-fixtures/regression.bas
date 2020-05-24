@@ -1,4 +1,31 @@
 NEW
+OSCLI "DIR"
+./expect 0 "Bad command"
+
+new
+10 I = 1
+20 REPEAT
+30  PRINT I
+40  I = I + 1
+50 UNTIL I > 10
+./clear
+RUN
+
+./expect 1 "4"
+./expect 1 "5"
+./expect 1 "6"
+
+
+NEW
+width 5
+10 PRINT "1234567890"
+./clear
+RUN
+./expect 1 "12345\b"
+./expect 1 "67890\b"
+width 300
+
+NEW
 10 PRINT "10"
 11 PRINT "11"
 13 REM BLAH
