@@ -1,14 +1,26 @@
 NEW
+10 PRINT "10"
+11 PRINT "11"
+13 REM BLAH
+RENUMBER
+./clear
+LIST
+./expect 1 "20 PRINT \"11\""
+
+
+NEW
 AUTO
 PRINT "time=";TIME
 TIME=20
 PRINT TIME
+STOP
 .ESC
 ./clear
 RUN
 
 ./expect 1 "time=\d*"
 ./expect 1 "HBIOS: BF_SYSSET, Subfunction: in C D0, DE:HL: 0000:000A"
+./expect 1 "STOP at line 40"
 
 new
 AUTO
@@ -121,6 +133,7 @@ PRINT "ATN: "; ATN(2)
 PRINT "ASN: "; ASN(0.5)
 print "ACS: "; ACS(0.2)
 PRINT "ABS: "; ABS(-1.2)
+PRINT "x="; 2*3+4-6/2
 
 .ESC
 ./clear
@@ -144,6 +157,7 @@ run
 ./expect 1 "ASN: 0.523598776"
 ./expect 1 "ACS: 1.36943841"
 ./expect 1 "ABS: 1.2"
+./expect 1 "x=7"
 
 NEW
 10 PRINT STRING$(2, "B")
