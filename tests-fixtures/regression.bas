@@ -1,6 +1,75 @@
-NEW
+
+
+new
 OSCLI "DIR"
+10 OSCLI "DIR"
+20 OUT 257, 16
+30 PRINT "D=";IN(23)
+RUN
+4567
+
 ./expect 0 "Bad command"
+./expect 0 "Mistake at line"
+./expect 1 "OUTPUT: 0: addr = 0101  DATA = 10"
+./expect 1 "D=INPUT : addr = 017    DATA = 4567"
+
+./clear
+LIST
+./expect 1 "10 OSCLI \"DIR\""
+./expect 1 "20 OUT 257, 1"
+./expect 1 "30 PRINT \"D=\";IN(23)"
+
+
+new
+HIMEM=HIMEM-1
+./clear
+PRINT "HIMEM=";HIMEM
+./expect 1 "HIMEM=[0-9]\+"
+
+new
+AUTO
+print "lomem="; lomem
+print "page="; page
+print "himem="; himem
+CLEAR
+DATA 9981
+READ A%
+PRINT "DATA=";A%
+REM COMMENT
+Proc_BLAH("SOME TEXT")
+DIM A(10)
+FOR I = 0 TO 10
+A(I) = I
+NEXT I
+PRINT "A(.)=";A(0);" ";A(10)
+END
+DEF Proc_BLAH(Title$)
+CLS
+PRINT TAB(2);Title$
+ENDPROC
+.ESC
+
+./clear
+run
+
+./expect 1 'page=256'
+./expect 1 'himem=[0-9]\+'
+./expect 1 'DATA=9981'
+./expect 1 'A(.)=0 10'
+./expect 1 'lomem=509'
+
+
+LOMEM=LOMEM+1
+./clear
+PRINT LOMEM
+./expect 1 "510"
+
+NEW
+page=512
+./clear
+PRINT PAGE
+./expect 1 "512"
+
 
 new
 10 I = 1
@@ -45,58 +114,9 @@ STOP
 ./clear
 RUN
 
-./expect 1 "time=\d*"
+./expect 1 "time=[0-9]\+"
 ./expect 1 "HBIOS: BF_SYSSET, Subfunction: in C D0, DE:HL: 0000:000A"
 ./expect 1 "STOP at line 40"
-
-new
-AUTO
-print "lomem="; lomem
-print "page="; page
-print "himem="; himem
-CLEAR
-DATA 9981
-READ A%
-PRINT "DATA=";A%
-REM COMMENT
-Proc_BLAH("SOME TEXT")
-DIM A(10)
-FOR I = 0 TO 10
-A(I) = I
-NEXT I
-PRINT "A(.)=";A(0);" ";A(10)
-END
-DEF Proc_BLAH(Title$)
-CLS
-PRINT TAB(2);Title$
-ENDPROC
-.ESC
-
-./clear
-run
-
-./expect 1 'page=256'
-./expect 1 'himem=39168'
-./expect 1 'DATA=9981'
-./expect 1 'A(.)=0 10'
-./expect 1 'lomem=509'
-
-HIMEM=HIMEM-1
-./clear
-PRINT HIMEM
-./expect 1 "39167"
-
-LOMEM=LOMEM+1
-./clear
-PRINT LOMEM
-./expect 1 "510"
-
-NEW
-page=512
-./clear
-PRINT PAGE
-./expect 1 "512"
-
 
 NEW
 AUTO
@@ -170,7 +190,7 @@ run
 ./expect 1 "SQR: 4"
 ./expect 1 "SIN: 0.912945251"
 ./expect 1 "SGN: \-1"
-./expect 1 "RND: \d*"
+./expect 1 "RND: [0-9]\+"
 ./expect 1 "RAD: 3.49065851E-2"
 ./expect 1 "PI: 3.14159265"
 ./expect 1 "NOT: \-1"
