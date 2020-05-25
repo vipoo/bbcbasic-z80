@@ -6,18 +6,18 @@ OSCLI "DIR"
 20 OUT 257, 16
 30 PRINT "D=";IN(23)
 RUN
-4567
+10
 
 ./expect 0 "Bad command"
 ./expect 0 "Mistake at line"
 ./expect 1 "OUTPUT: 0: addr = 0101  DATA = 10"
-./expect 1 "D=INPUT : addr = 017    DATA = 4567"
+./expect 1 "D=INPUT : addr = 017    DATA = 10"
 
 ./clear
 LIST
 ./expect 1 "10 OSCLI \"DIR\""
 ./expect 1 "20 OUT 257, 1"
-./expect 1 "30 PRINT \"D=\";IN(23)"
+./expect 1 "30 PRINT \"D=\";INP(23)"
 
 
 new
