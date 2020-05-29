@@ -681,14 +681,7 @@ LEX0:	LD	A,(IY)
 
 LEX_NOT_EXTENDED:
 	EX	AF, AF
-
 	INC	HL
-
-	SUB	A, 'a' - 'A'
-	CP	(HL)
-	JR	Z, LEX2
-	ADD	A, 'a' - 'A'
-
 	CP	(HL)
 	JR	Z,LEX2
 	RET	C		;FAIL EXIT
@@ -704,12 +697,6 @@ LEX3:	INC	HL
 	LD	A,(IY)
 	CP	'.'
 	JR	Z,LEX6		;FOUND (ABBREV.)
-
-	SUB	A, 'a' - 'A'
-	CP	(HL)
-	JR	Z, LEX3
-	ADD	A, 'a' - 'A'
-
 	CP	(HL)
 	JR	Z,LEX3
 	CALL	RANGE1

@@ -1,6 +1,6 @@
 
 
-new
+NEW
 OSCLI "DIR"
 10 OSCLI "DIR"
 20 OUT 257, 16
@@ -20,37 +20,37 @@ LIST
 ./expect 1 "30 PRINT \"D=\";INP(23)"
 
 
-new
+NEW
 HIMEM=HIMEM-1
 ./clear
 PRINT "HIMEM=";HIMEM
 ./expect 1 "HIMEM=[0-9]\+"
 
-new
+NEW
 AUTO
-print "lomem="; lomem
-print "page="; page
-print "himem="; himem
+PRINT "lomem="; LOMEM
+PRINT "page="; PAGE
+PRINT "himem="; HIMEM
 CLEAR
 DATA 9981
 READ A%
 PRINT "DATA=";A%
 REM COMMENT
-Proc_BLAH("SOME TEXT")
+PROC_BLAH("SOME TEXT")
 DIM A(10)
 FOR I = 0 TO 10
 A(I) = I
 NEXT I
 PRINT "A(.)=";A(0);" ";A(10)
 END
-DEF Proc_BLAH(Title$)
+DEF PROC_BLAH(Title$)
 CLS
 PRINT TAB(2);Title$
 ENDPROC
 .ESC
 
 ./clear
-run
+RUN
 
 ./expect 1 'page=256'
 ./expect 1 'himem=[0-9]\+'
@@ -65,13 +65,13 @@ PRINT LOMEM
 ./expect 1 "510"
 
 NEW
-page=512
+PAGE=512
 ./clear
 PRINT PAGE
 ./expect 1 "512"
 
 
-new
+NEW
 10 I = 1
 20 REPEAT
 30  PRINT I
@@ -86,13 +86,13 @@ RUN
 
 
 NEW
-width 5
+WIDTH 5
 10 PRINT "1234567890"
 ./clear
 RUN
 ./expect 1 "12345\b"
 ./expect 1 "67890\b"
-width 300
+WIDTH 300
 
 NEW
 10 PRINT "10"
@@ -144,12 +144,12 @@ END
 .ESC
 RUN
 
-new
+NEW
 AUTO
 A = OPENIN "TEST.TXT"
 FOR i=1 TO 10
   INPUT#A,A$
-  print A$
+  PRINT A$
 NEXT
 CLOSE#A
 .ESC
@@ -178,13 +178,13 @@ PRINT "DEG: "; DEG(20)
 PRINT "COS: "; COS(2)
 PRINT "ATN: "; ATN(2)
 PRINT "ASN: "; ASN(0.5)
-print "ACS: "; ACS(0.2)
+PRINT "ACS: "; ACS(0.2)
 PRINT "ABS: "; ABS(-1.2)
 PRINT "x="; 2*3+4-6/2
 
 .ESC
 ./clear
-run
+RUN
 
 ./expect 1 "\-2.18503986"
 ./expect 1 "SQR: 4"
@@ -208,8 +208,8 @@ run
 
 NEW
 10 PRINT STRING$(2, "B")
-20 print str$(9812); "X"
-30 print right$("abcd", 2)
+20 PRINT STR$(9812); "X"
+30 PRINT RIGHT$("abcd", 2)
 40 PRINT MID$("ABCDEFGH", 3, 3); "|"
 50 PRINT LEFT$("ZXY", 2); "|"
 60 PRINT CHR$(65); "|"
@@ -236,10 +236,10 @@ RUN
 NEW
 AUTO
 LET A$="OUTER"
-Proc_BLAH
+PROC_BLAH
 PRINT "A$=";A$
 END
-DEF Proc_BLAH
+DEF PROC_BLAH
 LOCAL A$
 A$="INNER"
 PRINT "BLAH=";A$
@@ -264,7 +264,7 @@ NEW
 210 GOTO 40
 ./clear
 
-run
+RUN
 
 ./expect 1 "100|20|200|40"
 
