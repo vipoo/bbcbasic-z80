@@ -87,21 +87,21 @@ do
     if [[ ${line:0:1} != "<" && ${line:0:1} != ">" ]]; then
       sudo screen -S bbcbasictestrunner -p 0 -X stuff "$line"
       sudo screen -S bbcbasictestrunner -p 0 -X stuff "^M"
-
-      # NEXT_WAIT_TIME=0
-      # until tail -n 1 /tmp/output.txt | grep -q "$line" || [ $NEXT_WAIT_TIME -eq 4 ]; do
-      #   (( NEXT_WAIT_TIME++ ))
-      #   sleep 0.25
-      # done
     fi
 
   fi
 
 done < "$input"
 
-sudo screen -S bbcbasictestrunner -p 0 -X stuff "*bye^M"
+sudo screen -S bbcbasictestrunner -p 0 -X stuff "*BYE^M"
 
-( tail -F -n50 /tmp/output.txt  & ) | grep -q "*bye"
+NEXT_WAIT_TIME=0
+until [ $(grep -c "*BYE" /tmp/output.txt) == "1" ] || [ $NEXT_WAIT_TIME -eq 6 ]; do
+  (( NEXT_WAIT_TIME++ ))
+  sleep 0.25
+  sudo screen -S bbcbasictestrunner -p 0 -X stuff "^M"
+  sudo screen -S bbcbasictestrunner -p 0 -X stuff "*BYE^M"
+done
 
 sudo screen -S bbcbasictestrunner -p 0 -X stuff "bye^M"
 
@@ -112,18 +112,6 @@ if [ "$SCREEN_PID" != "" ]; then
   echo
   echo "Session failed to exit"
 else
-  if [[ -f "./${SCRIPT_TO_RUN}.expect" ]]; then
-    awk '/RUN/,/efg/' /tmp/output.txt > ./.test-output.txt
-    cp /tmp/output.txt ./.full-test-output.txt
-
-    if ./${SCRIPT_TO_RUN}.expect ../.test-output.txt; then
-      echo "PASSED"
-    else
-      echo "FAILED"
-      exit 1
-    fi
-  else
-    echo -e "\nPASSED"
-  fi
+  echo -e "\nPASSED"
 fi
 
