@@ -27,8 +27,6 @@ VDPPORT			EQU	$BE	; default port
 	PUBLIC	COLOUR
 	PUBLIC	DRAW
 	PUBLIC	ENVEL
-	PUBLIC	GCOL
-	PUBLIC	MODE
 	PUBLIC	MOVE
 	PUBLIC	PLOT
 	PUBLIC	ADVAL
@@ -138,53 +136,6 @@ OUTCLR:	LD	L,A
 	CALL	OUTCHR
 	JP	XEQ
 
-; GCOL - Set graphics color
-;	destroys HL, A
-GCOL:	CALL	EXPRI
-	EXX
-	LD	A,L
-	AND	0FH
-	LD	E,A		; E contains new color in background nybble
-	ADD	A,A
-	ADD	A,A
-	ADD	A,A
-	ADD	A,A
-	LD	D,A		; D contains new color in foreground nybble
-	BIT	7,L		; bit 7 set indicates backdrop color
-	JP	NZ,BDGCOL
-	LD	A,(CGCOL)
-	BIT	6,L		; bit 6 set indicates cell background color
-	JP	NZ,BGGCOL
-	AND	0FH		; clear existing foreground
-	OR	D		; set new foreground
-	LD	(CGCOL),A
-	JP	XEQ
-BGGCOL:	LD	A,(CGCOL)
-	AND	0F0H		; clear existing background
-	OR	E		; set new background
-	LD	(CGCOL),A
-	JP	XEQ
-BDGCOL:	LD	A,(CCOLOR)	; get current backdrop colors
-	AND	0F0H		; clear existing backdrop
-	OR	E		; set new backdrop
-	LD	(CCOLOR),A	; save backdrop colors
-	LD	BC, (VDPADR) ; send to vdp
-	INC	C
-	LD	B,87H
-	OUT	(C),A
-	OUT	(C),B
-	JP	XEQ
-
-; set backdrop color
-
-; MODE - Set graphics mode
-;	destroys all registers
-MODE:	CALL	EXPRI		; get mode
-	EXX
-	LD	A,L
-	CALL	VDPINI
-	JP	XEQ
-
 ; PLOT - Plot graphics
 ;
 PLOT:	CALL	GETXY		;DE <- X, HL <- Y
@@ -222,7 +173,6 @@ VDPADR:	DEFB	VDPPORT		; VDP base port
 VDPINT:	DEFB	0		; 0 = NMI, 1 = INT
 
 CMODE:	DEFB	2		; Current graphics mode
-CGCOL:	DEFB	0F0H		; Current graphics color
 CCOLOR:	DEFB	0F0H		; Current text color
 GRAPHX:	DEFW	0		; Current graphics X coordinate
 GRAPHY:	DEFW	0		; Current graphics Y coordinate
@@ -414,7 +364,7 @@ MASKOP:	OR      B		; combine mask with previous pattern
 	SET	6,H		; set write address in color table
 	OUT	(C),L
 	OUT	(C),H
-	LD	A,(CGCOL)	; get current color
+	LD	A,0	; get current color
 	DEC	C		; select vram port
 	OUT	(C),A		; set color in color table
 	RET

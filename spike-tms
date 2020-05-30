@@ -1,0 +1,93 @@
+
+
+
+
+   10 CMDREG%=&BF
+
+   20 DATREG%=&BE
+
+   30 REM
+
+   40 DATA &02, &C2, &0E, &FF, &03, &76, &03, &0E
+
+   50 DIM registers%(8)
+
+   60 FOR i%=0 TO 7
+
+   70   READ registers%(i%)
+
+   80   OUT CMDREG%, registers%(i%)
+
+   90   OUT CMDREG%, i% OR &80
+
+  100 NEXT i%
+
+200 PRINT "populate name table"
+
+210 NameStart% = &3800
+
+220 NameLength% = &300 - 1
+
+230 OUT CMDREG%, NameStart% AND &FF
+
+240 OUT CMDREG%, INT(NameStart% / &100) OR &40
+
+250 FOR i% = 0 TO NameLength%
+
+260 OUT DATREG%, i% MOD &100
+
+270 NEXT i%
+
+400 PRINT "color table"
+
+410 CStart%=&2000
+
+420 CLength%=&1800 - 1
+
+430 OUT CMDREG%, CStart% AND &FF
+
+440 OUT CMDREG%, INT(CStart% / &100) OR &40
+
+450 FOR i% = 0 TO CLength%
+
+460 OUT DATREG%, &0F
+
+470 NEXT i%
+
+510 PRINT "Populate the pattern table"
+
+520 PatternStart% = &0000
+
+530 PatternLength% = &1800 - 1
+
+540 OUT CMDREG%, PatternStart% AND &FF
+
+550 OUT CMDREG%, INT(PatternStart% / &100) OR &40
+
+560 FOR i% = 0 TO PatternLength%
+
+570   OUT DATREG%, &00
+
+580 NEXT i%
+
+600 PROC_point(0, 0)
+
+610 PROC_point(128, 96)
+
+620 END
+
+1000 DEF PROC_point(x%, y%)
+
+1010  byteAddress% = (x% AND &F0) + ((y% DIV 8) * 256) + (y% MOD 8)
+
+1020  value% = 2^(7-(x% MOD 8))
+
+1030  OUT CMDREG%, byteAddress% AND &FF
+
+1040  OUT CMDREG%, (byteAddress% DIV &100) OR &40
+
+1050  OUT DATREG%, value%
+
+2000 ENDPROC
+
+

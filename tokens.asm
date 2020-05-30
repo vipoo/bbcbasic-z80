@@ -258,7 +258,7 @@ ERRWDS:	DEFB	7
 	DEFB	0
 	DEFM	"Subscript"
 	DEFB	0
-	DEFM	"Syntax !!error"
+	DEFM	"Syntax error"
 	DEFB	0
 	DEFM	"Escape"
 	DEFB	0
