@@ -1,5 +1,6 @@
 include "hbios.inc"
 include "constants.inc"
+#include "utils.inc"
 
 DATREG		EQU	$BE	; default port
 CMDREG		EQU	$BF	; default port
@@ -140,7 +141,7 @@ PLOT:
 	EXX
 
 	ld	c, 5
-	call	DIV_HL_C
+	MATH_DIV(HL,C)
 	PUSH	HL
 
 	CALL	COMMA
@@ -148,7 +149,7 @@ PLOT:
 	EXX
 
 	LD	C, 5
-	CALL	DIV_HL_C
+	MATH_DIV(HL,C)
 
 	POP	DE
 	PUSH	DE
@@ -195,23 +196,6 @@ LOOP:
 	OR	B
 	OUT	(DATREG), A
 	JP	XEQ
-
-DIV_HL_C:
-	XOR	A
-	LD	B, 16
-
-_LOOP:
-	ADD	HL, HL
-	RLA
-	JR	C, $+5
-	CP	C
-	JR	C, $+4
-
-	SUB	C
-	INC	L
-
-	DJNZ	_LOOP
-	RET
 
 
 INITMODE:

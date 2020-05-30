@@ -1,4 +1,4 @@
-SRCS = main.asmpp exec.asmpp eval.asmpp fpp.asm hardware.asm hardware-sound.asmpp hardware-time.asm cpm.asm ram.asm tokens.asmpp hardware-tms.asmpp tracing.asm
+SRCS = main.asmpp exec.asmpp eval.asmpp fpp.asm hardware.asm hardware-sound.asmpp hardware-time.asm cpm.asm ram.asm tokens.asmpp hardware-tms.asmpp utils.asmpp tracing.asm tracing.asm
 
 INCS := $(shell find . -name '*.inc')
 
