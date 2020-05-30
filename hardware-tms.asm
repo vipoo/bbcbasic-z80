@@ -53,9 +53,9 @@ COL_WHITE		EQU	15
 ; 14 142 Flashing cyan/red
 ; 15 143 Flashing white/black
 
-	PUBLIC	MODE, GCOL, CLG
+	PUBLIC	MODE, GCOL, CLG, PLOT
 
-	EXTERN	XEQ, EXPRI, ERROR, TELL
+	EXTERN	XEQ, EXPRI, ERROR, COMMA
 
 #define		TMS_IODELAY	NOP	!
 				NOP	!
@@ -127,6 +127,92 @@ GCOL2:
 	LD	(TMS_COLOUR), A
 	JP	XEQ
 
+; PLOT Mode,X,Y
+; PLOT <numeric>,<numeric>,<numeric>
+; PLOT <numeric>,<numeric>
+; PLOT BY <numeric>,<numeric>
+; Only support by X, Y (alias for 69, X, Y)
+; x - 0 to 1279, y 0 to 1023
+; mode 2 raw dimensions are 256 by 192
+; x = x / 5 and y = y / 5
+PLOT:
+	CALL	EXPRI		;"X"
+	EXX
+
+	ld	c, 5
+	call	DIV_HL_C
+	PUSH	HL
+
+	CALL	COMMA
+	CALL	EXPRI
+	EXX
+
+	LD	C, 5
+	CALL	DIV_HL_C
+
+	POP	DE
+	PUSH	DE
+
+	LD	A, E	; L => X AND $F8
+	AND	$F8
+	LD	E, A
+	LD	D, 0
+
+	LD	A, L	; A = Y MOD 8
+	AND	$07
+
+	SRL	L	; E = (Y / 8) * 256
+	SRL	L
+	SRL	L
+	LD	H, L
+	LD	L, 0
+
+	ADD	HL, DE
+	LD	C, A
+	LD	B, 0
+	ADD	HL, BC		; BYTE ADDRESS = L + DE + A
+
+	CALL	TMS_RDADDR
+
+	POP	DE
+	LD	A, E
+	AND	$07
+
+	LD	B, A
+	INC	B
+	LD	A, $00
+	SCF
+LOOP:
+	RRA
+	DJNZ	LOOP
+	LD	B, A
+	CALL	TMS_RDADDR
+	IN	A, (DATREG)
+	LD	C, A
+	TMS_IODELAY
+	CALL	TMS_WRADDR
+	LD	A, C
+	OR	B
+	OUT	(DATREG), A
+	JP	XEQ
+
+DIV_HL_C:
+	XOR	A
+	LD	B, 16
+
+_LOOP:
+	ADD	HL, HL
+	RLA
+	JR	C, $+5
+	CP	C
+	JR	C, $+4
+
+	SUB	C
+	INC	L
+
+	DJNZ	_LOOP
+	RET
+
 
 INITMODE:
 	LD	HL, MODE2REGS
@@ -150,7 +236,7 @@ INITMODE1:
 INITNAMETBL:
 	LD	L, NAME_START_LOW
 	LD	H, NAME_START_HIGH
-	CALL	TMS_ADDR
+	CALL	TMS_WRADDR
 
 	LD	DE, NAME_LEN
 	LD	B, 0
@@ -168,7 +254,7 @@ INITNAMETBL1:
 INITCOLRTBL:
 	LD	H, COLR_START_HIGH
 	LD	L, COLR_START_LOW
-	CALL	TMS_ADDR
+	CALL	TMS_WRADDR
 
 	LD	DE, COLR_LEN
 	LD	A, (TMS_COLOUR)
@@ -186,7 +272,7 @@ INITCOLRTBL1:
 INITPATNTBL:
 	LD	H, PATN_START_HIGH
 	LD	L, PATN_START_LOW
-	CALL	TMS_ADDR
+	CALL	TMS_WRADDR
 
 	LD	DE, PATN_LEN
 	LD	B, $0
@@ -200,7 +286,17 @@ INITPATNTBL1:
 	JR	NZ, INITPATNTBL1
 	RET
 
-TMS_ADDR:
+TMS_WRADDR:
+	LD	A, L
+	OUT	(CMDREG), A
+	TMS_IODELAY
+	LD	A, H
+	OR	$40
+	OUT	(CMDREG), A
+	TMS_IODELAY
+	RET
+
+TMS_RDADDR:
 	LD	A, L
 	OUT	(CMDREG), A
 	TMS_IODELAY

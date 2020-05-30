@@ -6,20 +6,20 @@
 	EXTERN	PRTHEXWORDHL
 	EXTERN	PRTHEX
 
-#define DEBUG(S) 	CALL	PRTSTRD 		\
-			defm	S 			\
+#define DEBUG(S) 	CALL	PRTSTRD 		!
+			defm	S 			!
 			defb	'$'
 
 #define TRACE_HL	CALL	PRTHEXWORDHL
-#define TRACE_IX	PUSH 	HL 			\
-			PUSH	IX			\
-			POP	HL			\
-			CALL	PRTHEXWORDHL		\
+#define TRACE_IX	PUSH 	HL 			!
+			PUSH	IX			!
+			POP	HL			!
+			CALL	PRTHEXWORDHL		!
 			POP	HL
 
-#define TRACE_D		PUSH	AF 			\
-			LD	A, D 			\
-			CALL	PRTHEX 			\
+#define TRACE_D		PUSH	AF 			!
+			LD	A, D 			!
+			CALL	PRTHEX 			!
 			POP	AF
 
 #define TRACE_A		CALL	PRTHEX
@@ -29,6 +29,6 @@
 #define DEBUG(S)
 #define TRACE_HL
 #define TRACE_D
-#define TRACE_a
+#define TRACE_A
 
 #endif

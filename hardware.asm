@@ -27,7 +27,6 @@ VDPPORT			EQU	$BE	; default port
 	PUBLIC	DRAW
 	PUBLIC	ENVEL
 	PUBLIC	MOVE
-	PUBLIC	PLOT
 	PUBLIC	ADVAL
 	PUBLIC	POINT
 	PUBLIC	GETIMS
@@ -134,23 +133,6 @@ OUTCLR:	LD	L,A
 	LD	A,'m'
 	CALL	OUTCHR
 	JP	XEQ
-
-; PLOT - Plot graphics
-;
-PLOT:	CALL	GETXY		;DE <- X, HL <- Y
-	LD	B,L
-	LD	C,E
-	CALL	BMPLOT
-XEQ1:	JP	XEQ
-
-GETXY:	CALL	EXPRI		;"X"
-	EXX
-	PUSH	HL
-	CALL	COMMA
-	CALL	EXPRI		;"Y"
-	EXX
-	POP	DE
-	RET
 
 ; unimplemented functions
 DRAW:
@@ -306,63 +288,3 @@ SETREG:	LD	A,(CMODE)
 
 ; Bit mask values for X coordinates 0 through 7
 MASK:	DEFB 80H, 40H, 20H, 10H, 8H, 4H, 2H, 1H
-
-; plot the pixel at X/Y coordinates
-;       B = Y position
-;       C = X position
-BMPLOT:	LD	A,(CMODE)	; only plot in mode 2
-	CP	2
-	RET	NZ
-	LD	A,B		; don't plot Y coord > 191
-	CP	192
-	RET	NC
-
-; calculate address offset to X,Y coord in DE
-	RRCA
-	RRCA
-	RRCA
-	AND	1FH		; D = (Y / 8)
-	LD	D,A
-	LD	A,C		; E = (X & F8)
-	AND	0F8H
-	LD	E,A
-	LD	A,B		; E |= (Y & 7)
-	AND	7
-	OR	E
-	LD	E,A
-
-; set bit in pattern table
-	LD	HL,MASK		; look up bit mask in table
-	LD	A,C		; from lower 3 bits of X coord
-	AND	7
-	LD	B,0
-	LD	C,A
-	ADD	HL,BC
-	LD	A,(HL)		; get mask in A
-	LD	BC, (VDPADR)
-	INC	C		; select vdp register port
-	LD	HL,PATTAB
-	ADD	HL,DE
-	OUT	(C),L		; set read address in pattern table
-	OUT	(C),H
-	DEC	C		; select vram port
-	IN	B,(C)		; read previous pattern
-MASKOP:	OR      B		; combine mask with previous pattern
-	SET	6,H		; set write address in pattern table
-	INC	C		; vdp register port
-	OUT	(C),L
-	OUT	(C),H
-	DEC	C		; select vram port
-	OUT     (C),A
-
-; set byte in color table
-	INC	C		; select vdp register port
-	LD	HL,COLTAB	; add the color table base address
-	ADD	HL,DE
-	SET	6,H		; set write address in color table
-	OUT	(C),L
-	OUT	(C),H
-	LD	A,0	; get current color
-	DEC	C		; select vram port
-	OUT	(C),A		; set color in color table
-	RET

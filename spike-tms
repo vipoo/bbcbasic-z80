@@ -50,7 +50,7 @@
 
 450 FOR i% = 0 TO CLength%
 
-460 OUT DATREG%, &0F
+460 OUT DATREG%, &D0
 
 470 NEXT i%
 
@@ -91,3 +91,68 @@
 2000 ENDPROC
 
 
+
+
+
+10 FOR x% = 0 TO 10
+
+20 FOR y% = 0 TO 10
+
+30 byteAddress% = (x% AND &F0) + ((y% DIV 8) * 256) + (y% MOD 8)
+
+40 PRINT x%; "x"; y%; " "; byteAddress%
+
+45 PRINT "V: "; 2^(7-(x% MOD 8))
+
+50 NEXT y%
+
+60 NEXT x%
+
+
+10 FOR X% = 0 TO 64
+
+20 FOR Y% = 0 TO 64
+
+30 PLOT X% * 5, Y% * 5
+
+35 PRINT
+
+40 NEXT Y%
+
+50 NEXT X%
+
+
+   10 CMDREG%=&BF
+
+   20 DATREG%=&BE
+
+  30 INPUT X%
+
+  32 INPUT Y%
+
+  40 PROC_point(X%, Y%)
+
+  50 REM PLOT X% * 5, Y% * 5
+
+  54 PRINT
+
+  55 PRINT "---"
+
+  70 GOTO 30
+
+
+1000 DEF PROC_point(x%, y%)
+
+1010  byteAddress% = (x% AND &F8) + ((y% DIV 8) * 256) + (y% MOD 8)
+
+1020  value% = 2^(7-(x% MOD 8))
+
+1023 PRINT byteAddress%, value%
+
+1030  OUT CMDREG%, byteAddress% AND &FF
+
+1040  OUT CMDREG%, (byteAddress% DIV &100) OR &40
+
+1050  OUT DATREG%, value%
+
+2000 ENDPROC
