@@ -23,7 +23,6 @@ include "constants.inc"
 
 VDPPORT			EQU	$BE	; default port
 
-	PUBLIC	CLG
 	PUBLIC	COLOUR
 	PUBLIC	DRAW
 	PUBLIC	ENVEL
@@ -154,7 +153,6 @@ GETXY:	CALL	EXPRI		;"X"
 	RET
 
 ; unimplemented functions
-CLG:
 DRAW:
 MOVE:
 POINT:
