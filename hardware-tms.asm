@@ -157,18 +157,23 @@ PLOT:
 	CALL	INT			; CONVERT TO INT
 	EXX				; HL IS Y / 5.33333
 
+	EX	DE, HL			; INVERT Y AXIES (ORIGIN IS BOTTOM, LEFT)
+	LD	HL, 191
+	OR	A
+	SBC	HL, DE
+
 	POP	DE
 	PUSH	DE			; DE IS X / 5
 
-	LD	A, E	; L => X AND $F8
+	LD	A, E			; L => X AND $F8
 	AND	$F8
 	LD	E, A
 	LD	D, 0
 
-	LD	A, L	; A = Y MOD 8
+	LD	A, L			; A = Y MOD 8
 	AND	$07
 
-	SRL	L	; E = (Y / 8) * 256
+	SRL	L			; E = (Y / 8) * 256
 	SRL	L
 	SRL	L
 	LD	H, L
@@ -177,7 +182,7 @@ PLOT:
 	ADD	HL, DE
 	LD	C, A
 	LD	B, 0
-	ADD	HL, BC		; BYTE ADDRESS = L + DE + A
+	ADD	HL, BC			; BYTE ADDRESS = L + DE + A
 
 	CALL	TMS_RDADDR
 
