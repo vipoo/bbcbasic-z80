@@ -17,8 +17,24 @@
 			CALL	PRTHEXWORDHL		!
 			POP	HL
 
+#define TRACE_DE	PUSH 	HL 			!
+			PUSH	DE			!
+			POP	HL			!
+			CALL	PRTHEXWORDHL		!
+			POP	HL
+
 #define TRACE_D		PUSH	AF 			!
 			LD	A, D 			!
+			CALL	PRTHEX 			!
+			POP	AF
+
+#define TRACE_C		PUSH	AF 			!
+			LD	A, C 			!
+			CALL	PRTHEX 			!
+			POP	AF
+
+#define TRACE_B		PUSH	AF 			!
+			LD	A, B 			!
 			CALL	PRTHEX 			!
 			POP	AF
 
@@ -30,5 +46,6 @@
 #define TRACE_HL
 #define TRACE_D
 #define TRACE_A
+#define TRACE_C
 
 #endif

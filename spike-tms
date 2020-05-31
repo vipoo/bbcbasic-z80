@@ -156,3 +156,38 @@
 1050  OUT DATREG%, value%
 
 2000 ENDPROC
+
+
+
+10 CLG
+
+20 X1% = 100
+
+30 Y1% = 200
+
+40 X2% = 800
+
+50 Y2% = 900
+
+52 PLOT X1%, Y1%
+
+54 PLOT X2%, Y2%
+
+60 YSTEP% = (Y2%-Y1%) / (X2% - X1%)
+
+65 Y% = Y1%
+
+70 FOR X% = X1% TO X2%
+
+80 FOR YS% = Y% TO Y% + YSTEP%
+
+90 PLOT X%, YS%
+
+100 NEXT YS%
+
+110 Y% = Y% + YSTEP%
+
+120 NEXT X%
+
+
+

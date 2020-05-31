@@ -24,9 +24,7 @@ include "constants.inc"
 VDPPORT			EQU	$BE	; default port
 
 	PUBLIC	COLOUR
-	PUBLIC	DRAW
 	PUBLIC	ENVEL
-	PUBLIC	MOVE
 	PUBLIC	ADVAL
 	PUBLIC	POINT
 	PUBLIC	GETIMS
@@ -135,8 +133,6 @@ OUTCLR:	LD	L,A
 	JP	XEQ
 
 ; unimplemented functions
-DRAW:
-MOVE:
 POINT:
 ENVEL:
 ADVAL:
