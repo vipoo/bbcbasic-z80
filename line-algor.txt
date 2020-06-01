@@ -1,0 +1,195 @@
+
+
+
+
+1 CMDREG=&BF
+
+2 DATREG=&BE
+
+3 cacheValue% = 0
+
+4 cacheAddress% = -1
+
+100 CLG
+
+110 PROC_plotLineB(0, 0, 4, 4)
+
+111 END
+
+110 PROC_plotLineB(100, 50, 0, 0)
+
+115 CLG
+
+120 PROC_plotLineB(0, 0, 50, 23)
+
+125 CLG
+
+130 PROC_plotLineB(0, 0, 255, 191)
+
+999 END
+
+5000 DEF PROC_plotLineB(x0%, y0%, x1%, y1%)
+
+5002 PROC_point(x0%, y0%) : PROC_point(x1%, y1%)
+
+5010 dx% = ABS(x1%-x0%)
+
+5020 IF x0% < x1% THEN sx% = 1 ELSE sx% = -1
+
+5030 dy% = -ABS(y1%-y0%)
+
+5040 IF y0%<y1% THEN sy% = 1 ELSE sy% = -1
+
+5050 err% = dx%+dy%
+
+5055 byteAddressY% = ((y0% DIV 8) * 256) + (y0% MOD 8)
+
+5056 byteAddressX% = (x0% AND &F8)
+
+5060 byteAddress% = byteAddressX% + byteAddressY%
+
+5065 value% = 2^(7-(x0% MOD 8))
+
+5070 PROC_pointX(x0%, y0%, byteAddress%, value%)
+
+5080 IF (x0% = x1% AND y0% = y1%) GOTO 5130
+
+5090 e2% = 2*err%
+
+5100 IF (e2% >= dy%) THEN err% = err% + dy% : x0% = x0% + sx% :  byteAddressX% = (x0% AND &F8) : value% = 2^(7-(x0% MOD 8))
+
+5110 IF (e2% <= dx%) THEN err% = err% + dx% : y0% = y0% + sy% : byteAddressY% = ((y0% DIV 8) * 256) + (y0% MOD 8)
+
+5120 GOTO 5060
+
+5130 ENDPROC
+
+6000 DEF PROC_pointX(x%, y%, byteAddress%, value%)
+
+6005 REM PRINT x, y
+
+6020 IF cacheAddress% = byteAddress% THEN cacheValue% = cacheValue% OR value% : GOTO 6060
+
+6030  OUT CMDREG, byteAddress% AND &FF
+
+6040  OUT CMDREG, (byteAddress% DIV &100)
+
+6050  value% = IN(DATREG) OR value%
+
+6052 cacheValue% = value% : cacheAddress% = byteAddress%
+
+6060  OUT CMDREG, byteAddress% AND &FF
+
+6070  OUT CMDREG, (byteAddress% DIV &100) OR &40
+
+6080  OUT DATREG, cacheValue%
+
+6999 ENDPROC
+
+10000 DEF PROC_point(x, y)
+
+10010 byteAddress = (x AND &F8) + ((y DIV 8) * 256) + (y MOD 8)
+
+10020 value = 2^(7-(x MOD 8))
+
+10030 PROC_pointX(x, y, byteAddress, value)
+
+10040 ENDPROC
+
+
+
+
+
+
+
+10005 REM PRINT x, y
+
+10010  byteAddress = (x AND &F8) + ((y DIV 8) * 256) + (y MOD 8)
+
+10020  value = 2^(7-(x MOD 8))
+
+10023  REM PRINT byteAddress, value
+
+10030  OUT CMDREG, byteAddress AND &FF
+
+10040  OUT CMDREG, (byteAddress DIV &100)
+
+10050  value = IN(DATREG) OR value
+
+10060  OUT CMDREG, byteAddress AND &FF
+
+10070  OUT CMDREG, (byteAddress DIV &100) OR &40
+
+10080  OUT DATREG, value
+
+20000 ENDPROC
+
+
+2 MODE 2
+
+5 CLG
+
+6 A% = TIME
+
+10 FOR I% = 0 TO 1000 STEP 5
+
+20 MOVE I%, 0
+
+30 DRAW I%, 1023
+
+40 NEXT I%
+
+50 PRINT TIME-A%
+
+100 MODE 2
+
+110 CLG
+
+120 A% = TIME
+
+130 FOR I% = 0 TO 1000 STEP 5
+
+140 MOVE 0, I%
+
+150 DRAW 1279, I%
+
+160 NEXT I%
+
+170 PRINT TIME-A%
+
+
+
+
+
+10 MODE 2
+
+20 CLG
+
+30 MOVE 0, 0
+
+40 DRAW 1279, 0
+
+50 DRAW 1279, 1023
+
+60 DRAW 0, 1023
+
+70 DRAW 0,0
+
+80 DRAW 1279, 1023
+
+100 MOVE 0, 1023
+
+110 DRAW 1279, 0
+
+
+
+MOVE 20, 1023
+DRAW 0, 999
+
+
+MOVE 20, 999
+DRAW 0, 1023
+
+
+MOVE 0, 999
+DRAW 20, 1023

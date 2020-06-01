@@ -1,5 +1,8 @@
 
-	PUBLIC	DIV_HL_C
+	PUBLIC	DIV_HL_C, MATH_ABS_HL, MATH_POS_HL, MATH_NEG_HL, MATH_CP_HL_DE
+
+; THE FOLLOWING ROUTINE DIVIDES HL BY C AND PLACES THE QUOTIENT IN HL AND THE REMAINDER IN A
+; https://wikiti.brandonw.net/index.php?title=Z80_Routines:Math:Division#16.2F16_division
 
 DIV_HL_C:
 	XOR	A
@@ -18,4 +21,44 @@ DIV_HL_C1:
 
 DIV_HL_C2:
 	DJNZ	LOOP
+	RET
+
+MATH_ABS_HL:
+	BIT	7, H
+	RET	Z
+MATH_POS_HL:
+	XOR	A
+	SUB	L
+	LD	L, A
+	SBC	A, A
+	SUB	H
+	LD	H, A
+	RET
+
+MATH_NEG_HL:
+	XOR	A
+	SUB	L
+	LD	L,A
+	SBC	A,A
+	SUB	H
+	LD	H,A
+	RET
+
+
+; MATH_CP_HL_DE -> test if HL >= DE
+; Input      HL=A, DE=B
+; Output     C FLAG RESET IF TRUE
+;            C FLAG SET IF FALSE
+MATH_CP_HL_DE:
+	LD	A, H
+	XOR	D
+	JP	M, MATH_CP_HL_DE2
+	SBC	HL, DE
+	RET	NC
+MATH_CP_HL_DE1:
+	SCF
+	RET
+MATH_CP_HL_DE2:
+	BIT	7, D
+	JR	Z, MATH_CP_HL_DE1
 	RET

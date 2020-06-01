@@ -159,35 +159,187 @@
 
 
 
+1 CMDREG%=&BF
+
+2 DATREG%=&BE
+
 10 CLG
 
-20 X1% = 100
+20 REM PROC_line(0, 0, 98, 16)
 
-30 Y1% = 200
+30 CLG
 
-40 X2% = 800
+40 REM PROC_line(0, 16, 98, 0)
 
-50 Y2% = 900
+50 CLG
 
-52 PLOT X1%, Y1%
+60 REM PROC_line(98, 16, 0, 0)
 
-54 PLOT X2%, Y2%
+70 CLG
 
-60 YSTEP% = (Y2%-Y1%) / (X2% - X1%)
+80 REM PROC_line(98, 0, 0, 16)
 
-65 Y% = Y1%
+90 CLG
 
-70 FOR X% = X1% TO X2%
+100 PROC_line(0, 0, 80, 50)
 
-80 FOR YS% = Y% TO Y% + YSTEP%
+999 END
 
-90 PLOT X%, YS%
+1000 DEF PROC_point(x%, y%)
 
-100 NEXT YS%
+1005 REM PRINT x%, y%
 
-110 Y% = Y% + YSTEP%
+1010  byteAddress% = (x% AND &F8) + ((y% DIV 8) * 256) + (y% MOD 8)
 
-120 NEXT X%
+1020  value% = 2^(7-(x% MOD 8))
+
+1023  REM PRINT byteAddress%, value%
+
+1030  OUT CMDREG%, byteAddress% AND &FF
+
+1040  OUT CMDREG%, (byteAddress% DIV &100)
+
+1050  value% = IN(DATREG%) OR value%
+
+1060  OUT CMDREG%, byteAddress% AND &FF
+
+1070  OUT CMDREG%, (byteAddress% DIV &100) OR &40
+
+1080  OUT DATREG%, value%
+
+2000 ENDPROC
+
+3000 DEF PROC_line(X1%, Y1%, X2%, Y2%)
+
+3001 IF X1% < X2% THEN 3010
+
+3005 X%=X1% : Y%=Y1% : X1% = X2% : Y1% = Y2% : X2% = X% : Y2% = Y%
+
+3010 PROC_point(X1%, Y1%)
+
+3020 PROC_point(X2%, Y2%)
+
+3022 IF Y1% > Y2% ystep%=-1 ELSE ystep%=1
+
+3030 S% = ABS((X2% - X1%) DIV (Y2%-Y1%))
+
+3032 PRINT ABS((X2% - X1%) DIV (Y2%-Y1%))
+
+3034 PRINT ABS((Y2% - Y1%) DIV (X2%-X1%))
+
+3040 PRINT S%
+
+3050 IF X1% >= X2% THEN GOTO 4000
+
+3060 PROC_point(X1%, Y1%)
+
+3070 REM XS% = XS% + 1
+
+3080 X1% = X1% + 1
+
+3090 IF (X1% MOD S%) = 0 THEN PROC_point(X1%, Y1%) : Y1% = Y1% + ystep%
+
+3100 GOTO 3050
+
+4000 ENDPROC
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1 CMDREG=&BF
+
+2 DATREG=&BE
+
+10 CLG
+
+20 REM PROC_line(0, 0, 98, 16)
+
+30 CLG
+
+40 REM PROC_line(0, 16, 98, 0)
+
+50 CLG
+
+60 REM PROC_line(98, 16, 0, 0)
+
+70 CLG
+
+80 REM PROC_line(98, 0, 0, 16)
+
+90 CLG
+
+100 PROC_line(0, 0, 80, 50)
+
+999 END
+
+1000 DEF PROC_point(x, y)
+
+1005 REM PRINT x, y
+
+1010  byteAddress = (x AND &F8) + ((y DIV 8) * 256) + (y MOD 8)
+
+1020  value = 2^(7-(x MOD 8))
+
+1023  REM PRINT byteAddress, value
+
+1030  OUT CMDREG, byteAddress AND &FF
+
+1040  OUT CMDREG, (byteAddress DIV &100)
+
+1050  value = IN(DATREG) OR value
+
+1060  OUT CMDREG, byteAddress AND &FF
+
+1070  OUT CMDREG, (byteAddress DIV &100) OR &40
+
+1080  OUT DATREG, value
+
+2000 ENDPROC
+
+3000 DEF PROC_line(X1, Y1, X2, Y2)
+
+3001 IF X1 < X2 THEN 3010
+
+3005 X=X1 : Y=Y1 : X1 = X2 : Y1 = Y2 : X2 = X : Y2 = Y
+
+3010 PROC_point(X1, Y1)
+
+3020 PROC_point(X2, Y2)
+
+3022 IF Y1 > Y2 ystep=-1 ELSE ystep=1
+
+3030 S = ABS((X2 - X1) / (Y2-Y1))
+
+3032 PRINT ABS((X2 - X1) / (Y2-Y1))
+
+3034 PRINT ABS((Y2 - Y1) / (X2-X1))
+
+3040 XS = 0 : PRINT S
+
+3050 IF X1 >= X2 THEN GOTO 4000
+
+3060 PROC_point(X1, Y1)
+
+3070 XS = XS + 1
+
+3080 X1 = X1 + 1
+
+3090 IF XS > S THEN XS = 0 : PROC_point(X1, Y1) : Y1 = Y1 + ystep
+
+3100 GOTO 3050
+
+4000 ENDPROC

@@ -3,7 +3,7 @@ RUN
 
 ./expect 1 'OUTPUT: 0: addr = 02BF  DATA = 02'
 ./expect 1 'OUTPUT: 1: addr = 80BF  DATA = 80'
-./expect 1 'OUTPUT: 2: addr = C2BF  DATA = C2'
+./expect 1 'OUTPUT: 2: addr = E2BF  DATA = E2'
 ./expect 1 'OUTPUT: 3: addr = 81BF  DATA = 81'
 ./expect 1 'OUTPUT: 4: addr = 0EBF  DATA = 0E'
 ./expect 1 'OUTPUT: 5: addr = 82BF  DATA = 82'
