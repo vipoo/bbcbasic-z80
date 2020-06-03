@@ -4,7 +4,7 @@ INCS := $(shell find . -name '*.inc')
 
 ASSEMBLER=apploader
 ASSFLAGS=-b --page-align
-# -DTRACING
+#-DTRACING
 
 bbcbasic.com: $(SRCS)
 	$(MAKE) version._inc

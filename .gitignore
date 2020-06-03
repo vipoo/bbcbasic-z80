@@ -16,3 +16,4 @@ consts._inc
 *.sym
 *.asmpp
 test.txt
+*.bbc
