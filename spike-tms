@@ -343,3 +343,105 @@
 3100 GOTO 3050
 
 4000 ENDPROC
+
+
+
+
+
+
+
+1 CMDREG%=&BF
+
+2 DATREG%=&BE
+
+5 CLG
+
+10 A%=0
+
+20 REM PROC_point(1, 1)
+
+30 REM PRINT FN_point(1, 1)
+
+40 REM CLG
+
+45 A = 20 * 5 : B = 1024 - 20 * (1024 / 192)
+
+50 MOVE 0, 1023 : DRAW A, 1023 : DRAW A, B : DRAW 0, B : DRAW 0, 1023
+
+60 PROC_fill(2, 2)
+
+70 END
+
+500 DEF PROC_fill(x, y)
+
+502 A% = A% + 1 : PRINT A%
+
+505 IF x < 0 OR y < 0 THEN GOTO 600
+
+510 IF FN_point(x, y) THEN GOTO 600
+
+515 REM PRINT "A", x, y, FN_point(x, y)
+
+520 PROC_point(x, y)
+
+530 PROC_fill(x - 1, y)
+
+540 PROC_fill(x + 1, y)
+
+550 PROC_fill(x, y - 1)
+
+560 PROC_fill(x, y + 1)
+
+570 GOTO 900
+
+600 REM PRINT x, y
+
+900 A% = A% - 1
+
+910 ENDPROC
+
+999 END
+
+1000 DEF PROC_point(x%, y%)
+
+1005 REM PRINT x%, y%
+
+1010  byteAddress% = (x% AND &F8) + ((y% DIV 8) * 256) + (y% MOD 8)
+
+1020  value% = 2^(7-(x% MOD 8))
+
+1030  OUT CMDREG%, byteAddress% AND &FF
+
+1040  OUT CMDREG%, (byteAddress% DIV &100)
+
+1050  value% = IN(DATREG%) OR value%
+
+1060  OUT CMDREG%, byteAddress% AND &FF
+
+1070  OUT CMDREG%, (byteAddress% DIV &100) OR &40
+
+1080  OUT DATREG%, value%
+
+2000 ENDPROC
+
+3000 DEF FN_point(x%, y%)
+
+3010  byteAddress% = (x% AND &F8) + ((y% DIV 8) * 256) + (y% MOD 8)
+
+3020  value% = 2^(7-(x% MOD 8))
+
+3030  OUT CMDREG%, byteAddress% AND &FF
+
+3040  OUT CMDREG%, (byteAddress% DIV &100)
+
+3050  V% = IN(DATREG%)
+
+3060 REM PRINT : PRINT "V", V%, value%
+
+3070 value% = V% AND value%
+
+3080 IF value% = 0 THEN value% = FALSE ELSE value% = TRUE
+
+3090 =value%
+
+
